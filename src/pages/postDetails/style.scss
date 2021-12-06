@@ -1,0 +1,63 @@
+
+.post_detail {
+  background: var(--white);
+  padding: 10px;
+  min-height: 100vh;
+  
+  .post-end-meta {
+    li {
+      a {
+        padding: 0 5px;
+      }
+    }
+  }
+}
+
+
+.article{
+  margin-top: 20px;
+  line-height: 1.8;
+  color: rgba(0, 0, 0, 0.8);
+  img{
+    width: 100%;
+  }
+}
+.code {
+  pre {
+    background: #383838;
+    padding: 15px;
+    color: #dcdcdc;
+    //width: max-content;
+    overflow-x: auto;
+    //overflow: scroll;
+    code {
+      font-family: "Fira Code";
+      font-size: 13px;
+      width: 100%;
+    }
+  }
+}
+
+.post_author_description{
+  display: flex;
+  .avatar{
+    display: flex;
+    justify-content: center;
+    width: 60px;
+    img{
+      border-radius: 100%;
+      width: 100%;
+    }
+  }
+  .user_info{
+    margin-left: 20px;
+    h4{
+      color: #383838;
+    }
+    .author_desc{
+      color: #939393;
+      font-size: 14px;
+    }
+  }
+
+}
