@@ -29,7 +29,8 @@ export default defineConfig({
   server: {
     port: 5500
   },
-  base: "/my-blog/",
+  // base: "my-blog/",
+  base: "https://rasel-code-dev.github.io/my-blog/",
   build: {
     outDir: "/docs"
   },
