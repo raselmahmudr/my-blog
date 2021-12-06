@@ -29,6 +29,9 @@ export default defineConfig({
   server: {
     port: 5500
   },
+  build: {
+    outDir: "/docs"
+  },
   resolve: {
     alias: {
       "app": path.resolve(__dirname, "./src"),
