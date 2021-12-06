@@ -12,7 +12,7 @@ import './index.css'
 
 
 ReactDom.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/my-blog">
     <Provider store={store}>
       <App />
     </Provider>
