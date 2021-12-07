@@ -2,8 +2,6 @@
 .posts_wrapper {
   background: var(--white);
   padding: 10px;
-  min-height: 100vh;
-  
   .filter_items {
     .search_text {
       color: #5659bb;
@@ -37,4 +35,8 @@
 
 .post_cover{
   min-width: 100px;
+  .post_img{
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
 }

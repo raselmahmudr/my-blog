@@ -7,11 +7,18 @@ import "highlight.js/styles/atom-one-dark.css"
 import "./style.scss"
 import apis from "../../apis";
 import fullLink from "../../utils/fullLink";
+import api from "../../apis";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faEye, faHeart} from "@fortawesome/pro-solid-svg-icons";
+import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
+import {faHeart as faHeartLI} from "@fortawesome/pro-regular-svg-icons";
+import {useSelector} from "react-redux";
 
 
 const PostDetails = (props) => {
 
   let params = useParams()
+  const authState = useSelector(state=>state.authState)
   
   const [postDetails, setPostDetails] = React.useState({mdContent: ""})
 
@@ -52,14 +59,59 @@ const PostDetails = (props) => {
       xhtml: false
     });
   }, [postDetails])
-  
+
+
+  function handleAddLike(post_id) {
+    if (authState.id) {
+      api.post("/api/toggle-like", {post_id: post_id, user_id: authState.id}).then(r => {
+        if (r.status === 201) {
+          let post = r.data.post
+          setPostDetails({
+            ...postDetails,
+            likes: post.likes
+          })
+        }
+      })
+
+    } else {
+      alert("You have to login first to like this post")
+    }
+  }
+
+
+  function postReaction(post) {
+    const [isOver, setOver] = React.useState(false)
+    let youLiked = post.likes?.indexOf(authState.id) !== -1
+
+    return (
+        <div>
+          <ul className="flex text-sm">
+            <li className="w-30 mx-1 flex items-center">
+              <FontAwesomeIcon icon={youLiked ? faHeart : isOver ? faHeart : faHeartLI}
+                 onMouseEnter={()=>setOver(true)}
+                 onMouseLeave={()=>setOver(false)}
+                 onClick={(e) => handleAddLike(post.id)}
+                 className={['cursor-pointer hover:text-pink-700', youLiked ? 'text-pink-400 ' : 'text-gray-800'].join(" ")}/>
+              <h4 className="font-normal ml-1">{post.likes ? post.likes.length : '0'}</h4>
+            </li>
+          </ul>
+        </div>
+    )
+  }
+
+
   return (
     <div className="container px-15 mt-5">
 
-      {postDetails.author && <div className="post_author_description">
+      {postDetails.author && <div className="post_author_description items-start">
        <div>
          <div className="avatar">
-           <img src={fullLink(postDetails.author.avatar)} alt=""/>
+           {postDetails.author.avatar ? (
+               <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
+           // <img src={fullLink(postDetails.author.avatar)} alt=""/>
+           ) : (
+               <FontAwesomeIcon className="text-5xl" icon={faUserCircle} />
+           ) }
          </div>
        </div>
         <div className="user_info">
@@ -89,11 +141,27 @@ const PostDetails = (props) => {
 
           <br/>
 
+          <div className="flex items-center">
+            <div className="flex items-center mb-2">
+              {postReaction(postDetails)}
+              <h4 className="ml-1 text-sm">Loves</h4>
+            </div>
+
+            <div className="flex items-center mb-2 ml-4">
+              <FontAwesomeIcon icon={faEye} />
+              <h4 className="ml-1 text-sm">{postDetails.hits ? postDetails.hits : 0} read</h4>
+            </div>
+          </div>
+
+
           <div className="post-end-meta flex align-center">
             <h4 className="title">Tags: </h4>
             <ul className="flex">
               {postDetails.tags && postDetails.tags.map(tag => (
-                <li key={tag}><Link className="text-blue-500 hover:underline" to={`/?search=${tag}`}>{tag}</Link></li>
+                <li
+                    className="bg-gray-9 m-2 text-xs py-1 rounded"
+                    key={tag}>
+                  <Link className="text-gray-80 font-medium text-opacity-60" to={`/?search=${tag}`}>#{tag}</Link></li>
               ))}
             </ul>
           </div>

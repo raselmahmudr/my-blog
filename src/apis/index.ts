@@ -6,7 +6,7 @@ export const backend = "https://rsl-blog-server.herokuapp.com"
 
 const api = axios.create({
   baseURL: backend,
-  // withCredentials: true,
+  withCredentials: true, // to send cookie in server
   headers: {
     token: window.localStorage.getItem("token") || ""
   }
