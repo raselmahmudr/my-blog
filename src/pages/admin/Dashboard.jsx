@@ -41,13 +41,31 @@ const DashboardHome = (props)=>{
   function handlePostDelete(id) {
     dispatch(deletePost(id))
   }
-  
+
+  function downloadBackup(){
+    api.get("/api/backup", {responseType: "blob"}).then(r=>{
+      console.log(r.data)
+      const url = window.URL.createObjectURL(new Blob([r.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'backup.zip'); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      link.remove()
+    })
+  }
+
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
-      { adminNav.map(nav=>(
-        <NavLink to={nav.to}>{nav.text}</NavLink>
-      )) }
+    <div className="container px-4">
+      <h2 className="my-2">Admin Dashboard</h2>
+      {/*{ adminNav.map(nav=>(*/}
+      {/*  <NavLink to={nav.to}>{nav.text}</NavLink>*/}
+      {/*)) }*/}
+
+      <button className="btn mb-2" onClick={downloadBackup}>Download server backup Database</button>
+
+
+      <h4>All Posts</h4>
 
       { postState.posts.map(p=>(
           <div>

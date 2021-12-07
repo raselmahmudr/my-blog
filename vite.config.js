@@ -30,10 +30,9 @@ export default defineConfig({
     port: 5500
   },
   base: "/my-blog/",
-  // base: "/my-blog/",
-  build: {
-    outDir: "docs"
-  },
+  // build: {
+  //   outDir: "docs"
+  // },
   resolve: {
     alias: {
       "app": path.resolve(__dirname, "./src"),

@@ -4,7 +4,8 @@
   width: 100%;
   padding: 0px 0px;
   z-index: 1000;
-  min-height: 50px;
+  line-height: 34px;
+  //min-height: 50px;
   @apply bg-primary;
   position: fixed;
   top: 0;
@@ -35,7 +36,7 @@
 
 .nav_items{
   .nav_item{
-    padding: 15px 15px;
+    padding: 0px 15px;
   }
   .avatar_logo{
     padding: 0 !important;

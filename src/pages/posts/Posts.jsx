@@ -22,8 +22,7 @@ const Posts = (props) => {
 
   const dispatch = useDispatch()
   const history = useHistory()
-  
-  let qs = queryString.parse(history.location.search)
+
 
   useEffect(()=>{
     if(postState.posts.length < 1) {
@@ -33,24 +32,24 @@ const Posts = (props) => {
   }, [])
 
 
-  useEffect(async () => {
-    let val = qs.search
-    if (val) {
-      let uniqArr = filterPost(postState.posts, val.trim().toLowerCase())
-      if (uniqArr.length > 0) {
-        dispatch({type: "SEARCH_POSTS", payload: uniqArr})
-        dispatch({type: "SET_POST_SEARCH_VALUE", payload: val.trim().toLowerCase()})
-
-        history.replace(`/?search=${val}`)
-      } else {
-        dispatch({type: "SEARCH_POSTS", payload: []})
-        history.replace(`/?search=${val}`)
-      }
-    } else {
-      dispatch({type: "SEARCH_POSTS", payload: postState.posts})
-    }
-    
-  }, [qs && qs.search && qs.search])
+  // useEffect(async () => {
+  //   let val = qs.search
+  //   if (val) {
+  //     let uniqArr = filterPost(postState.posts, val.trim().toLowerCase())
+  //     if (uniqArr.length > 0) {
+  //       dispatch({type: "SEARCH_POSTS", payload: uniqArr})
+  //       dispatch({type: "SET_POST_SEARCH_VALUE", payload: val.trim().toLowerCase()})
+  //
+  //       history.replace(`/?search=${val}`)
+  //     } else {
+  //       dispatch({type: "SEARCH_POSTS", payload: []})
+  //       history.replace(`/?search=${val}`)
+  //     }
+  //   } else {
+  //     dispatch({type: "SEARCH_POSTS", payload: postState.posts})
+  //   }
+  //   console.log(qs)
+  // }, [history.location.search])
 
   
   let updatedComments = []

@@ -1,7 +1,6 @@
 import {NavLink, useHistory} from "react-router-dom";
 import "./navigation.scss"
 import fullLink from "../../utils/fullLink";
-import Badge from "../UI/badge/Badge";
 import  React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import PreloadLink from "../preloadLink/PreloadLink";
@@ -20,7 +19,7 @@ import {
   faUsers
 } from '@fortawesome/pro-solid-svg-icons'
 
-import {faAdn} from "@fortawesome/free-brands-svg-icons";
+import {faAdn} from "@fortawesome/pro-brands-svg-icons";
 
 const Navigation = (props) => {
   
@@ -80,7 +79,7 @@ const Navigation = (props) => {
     )
   }
   
-  function searchHandler() {
+  function searchHandler(e) {
     let val = postState.searchValue.trim().toLowerCase()
     if(val) {
       let uniqArr = filterPost(postState.posts, val)
@@ -94,6 +93,15 @@ const Navigation = (props) => {
     } else {
       dispatch({type: "SEARCH_POSTS", payload: postState.posts})
       history.replace(`/`)
+    }
+  }
+
+  function handleChange(e) {
+    if(e.target.value.trim()){
+      dispatch({type: "SET_POST_SEARCH_VALUE", payload: e.target.value.trim()})
+    } else {
+      dispatch({type: "SEARCH_POSTS", payload: postState.posts})
+      dispatch({type: "SET_POST_SEARCH_VALUE", payload: ""})
     }
   }
 
@@ -111,9 +119,9 @@ const Navigation = (props) => {
               </div>
               <div className="nav-search-input_wrapper flex-2">
                 <input
-                    onKeyPress={(e)=>e.key === "Enter" && searchHandler()}
+                    onKeyPress={(e)=>e.key === "Enter" && searchHandler(e)}
                     value={postState.searchValue}
-                    onChange={(e)=>dispatch({type: "SET_POST_SEARCH_VALUE", payload: e.target.value})}
+                    onChange={handleChange}
                     className="nav-search-input"
                     type="text"
                     placeholder="Search Blog Posts"

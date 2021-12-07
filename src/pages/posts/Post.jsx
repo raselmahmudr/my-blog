@@ -2,11 +2,9 @@ import React from 'react';
 import fullLink from "../../utils/fullLink";
 import {Link} from "react-router-dom";
 import api from "../../apis";
-import {fa500px} from "@fortawesome/pro-brands-svg-icons";
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHeart, faUserCircle, faUsers} from "@fortawesome/pro-solid-svg-icons";
-import {faUser} from "@fortawesome/pro-regular-svg-icons";
-
 
 const Post = (props) => {
     const { post, authId } = props

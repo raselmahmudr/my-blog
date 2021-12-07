@@ -22,10 +22,18 @@ export const loginUser = (userData, dispatch, cb)=> {
             type: "LOGIN",
             payload: response.data
           })
+            cb(false)
+        } else {
+            response(response.data.message)
         }
-        cb()
-
       })
+  .catch(err=> {
+      if(err.response){
+        cb(err.response.data.message)
+      } else {
+        cb(err.message)
+      }
+  })
 }
 
 

@@ -2,9 +2,10 @@ import React, {useEffect} from "react";
 import {Link, useHistory} from "react-router-dom";
 import api from "src/apis";
 import {useDispatch} from "react-redux";
+import {CSSTransition} from "react-transition-group";
 
 const Registration = (props) => {
-  
+  const [message, setMessage] = React.useState("")
   const [userData, setUserData] = React.useState({
     firstName: "",
     lastName: "",
@@ -25,6 +26,7 @@ const Registration = (props) => {
   
   function handleSubmit(e) {
     e.preventDefault()
+    setMessage("")
     let complete = true;
     for (const userDataKey in userData) {
       if (!userData[userDataKey]) {
@@ -33,7 +35,7 @@ const Registration = (props) => {
     }
     if (complete) {
       if (userData.password !== userData.confirmPassword) {
-        alert("password not matched")
+        setMessage("password not matched")
         return;
       }
       api.post("/api/auth/users", {
@@ -43,14 +45,23 @@ const Registration = (props) => {
         password: userData.password,
       }).then(response => {
         if(response.status === 201){
-          console.log("DSFFsf")
           dispatch({
             type: "LOGIN",
             payload: response.data
           })
           history.push("/")
+        } else {}
+        setMessage(response.data.message)
+      })
+      .catch(ex=>{
+        if(ex.response){
+          setMessage(ex.response.data.message)
+        } else {
+          setMessage(ex.message)
         }
       })
+    } else {
+      setMessage("You have to fill all input ")
     }
   }
   
@@ -60,6 +71,13 @@ const Registration = (props) => {
         
         <div className="bg-white px-6 py-4 rounded-5 max-w-xl mx-auto">
           <h1 className="text-2xl font-400 text-primary text-center">Create a new account.</h1>
+
+          <CSSTransition unmountOnExit={true} in={message} timeout={500} classNames="my-node" >
+            <div className="error-alert">
+              <h4>{message}</h4>
+            </div>
+          </CSSTransition>
+
           <form onSubmit={handleSubmit} className="py-5">
             
             <div className="flex mb-2 ">

@@ -2,6 +2,7 @@
   "name": "node-sql",
   "version": "1.0.0",
   "main": "main.js",
+  "homepage": "https://github.com/rasel-code-dev/my-blog/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,11 +12,12 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/pro-duotone-svg-icons": "^5.15.4",
-    "@fortawesome/pro-light-svg-icons": "^5.5.0",
-    "@fortawesome/pro-regular-svg-icons": "^5.5.0",
-    "@fortawesome/pro-solid-svg-icons": "^5.5.0",
-    "@fortawesome/pro-brands-svg-icons": "^5.5.0",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/pro-duotone-svg-icons": "5.15.4",
+    "@fortawesome/pro-light-svg-icons": "5.15.4",
+    "@fortawesome/pro-regular-svg-icons": "5.15.4",
+    "@fortawesome/pro-solid-svg-icons": "5.15.4",
+    "@fortawesome/pro-brands-svg-icons": "5.5.0",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
@@ -43,5 +45,6 @@
     "postcss": "^8.4.4",
     "tailwindcss": "^2.2.19",
     "vite": "^2.3.8"
-  }
+  },
+  "license": "Unlicense"
 }

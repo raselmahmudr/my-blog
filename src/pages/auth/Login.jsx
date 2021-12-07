@@ -2,11 +2,16 @@ import React, {useEffect} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux"
 import { loginUser } from "src/store/actions/authAction";
+import {CSSTransition} from "react-transition-group";
+import "./Login.scss"
+
 
 const Login = (props) => {
   
   const dispatch = useDispatch()
   const history = useHistory()
+
+  const [message, setMessage] = React.useState("")
 
   const [userData, setUserData] = React.useState({
     email: "",
@@ -23,6 +28,7 @@ const Login = (props) => {
   
   function handleSubmit(e) {
     e.preventDefault()
+    setMessage("")
     let complete = true;
     for (const userDataKey in userData) {
       if (!userData[userDataKey]) {
@@ -30,31 +36,34 @@ const Login = (props) => {
       }
     }
     if (complete) {
-      loginUser(userData, dispatch, (cb)=>{
-        history.push("/")
+      loginUser(userData, dispatch, (err)=>{
+        if(err){
+          setMessage(err)
+        } else {
+          history.push("/")
+        }
       })
-      // if(userData.password === "123" && userData.email === "rasel@gmail.com"){
-      //   dispatch({
-      //     type: "LOGIN",
-      //     payload: {
-      //       id: "1",
-      //       username: "rasel",
-      //       email: userData.email,
-      //       avatar: "",
-      //     }
-      //   })
-      // }
     } else {
-      alert("please full all field")
+      setMessage("You have to fill all field")
     }
   }
-  
+
+
   return (
     <div>
       <div className="container mx-auto">
+
+
         <div className="bg-white px-6 py-4 rounded-5 max-w-xl mx-auto">
-          <h1 className="text-2xl font-400 text-gray-light-7 text-center">Login in your Account.</h1>
-          <form onSubmit={handleSubmit} className="py-10">
+          <h1 className="text-2xl font-400 text-gray-light-7 text-center mb-5">Login in your Account.</h1>
+
+          <CSSTransition unmountOnExit={true} in={message} timeout={500} classNames="my-node" >
+            <div className="error-alert">
+              <h4>{message}</h4>
+            </div>
+          </CSSTransition>
+
+          <form onSubmit={handleSubmit} className="py-5">
             <div className=" flex mb-2">
               <label
                   className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4"
