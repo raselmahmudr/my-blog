@@ -13,6 +13,7 @@ import {faEye, faHeart} from "@fortawesome/pro-solid-svg-icons";
 import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
 import {faHeart as faHeartLI} from "@fortawesome/pro-regular-svg-icons";
 import {useSelector} from "react-redux";
+import PreloadLink from "src/components/preloadLink/PreloadLink";
 
 
 const PostDetails = (props) => {
@@ -116,7 +117,8 @@ const PostDetails = (props) => {
        </div>
         <div className="user_info">
           <div className="flex align-center">
-            <h4 className="title"><Link to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</Link></h4>
+            <h4 className="title">
+              <PreloadLink  to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink></h4>
             <button className="btn ml-5 btn-outline">Follow</button>
           </div>
           <p className="author_desc">{postDetails.author.description}</p>

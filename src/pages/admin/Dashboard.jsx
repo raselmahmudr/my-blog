@@ -1,21 +1,38 @@
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
 import AddPost from "./AddPost";
 import {Switch, Route, NavLink, Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {deletePost, fetchPosts} from "../../store/actions/postAction";
 import api from "../../apis";
+import ProgressBar from "../../components/UI/topProgressBar/TopProgressBar";
+
+
+const Login = lazy(()=>import("src/pages/auth/Login"));
 
 const Dashboard = (props) => {
-  
-  const adminRoutes = [
-    { path: "/admin/dashboard", exact: true, component: DashboardHome },
-    { path: "/admin/dashboard/add-post/:postId", exact: true, component: AddPost }
-  ]
-  
+
+  const authState = useSelector(state=> state.authState)
+
+  function adminRoutes(isAuth){
+    if(isAuth) {
+      return [
+        {path: "/admin/dashboard", exact: true, component: DashboardHome},
+        {path: "/admin/dashboard/add-post/:postId", exact: true, component: AddPost}
+      ]
+    } else {
+      return [
+        {path: "/admin/dashboard",  component: Login},
+        {path: "/admin/dashboard/add-post/:postId",   component: Login}
+      ]
+    }
+  }
+
   return (
     <div className="container px-15">
       <Switch>
-        {adminRoutes.map(route=> <Route {...route} /> )}
+        <Suspense fallback={<ProgressBar/>}>
+        {adminRoutes(authState.id).map(route=> <Route {...route} /> )}
+        </Suspense>
       </Switch>
       
     </div>
@@ -44,7 +61,6 @@ const DashboardHome = (props)=>{
 
   function downloadBackup(){
     api.get("/api/backup", {responseType: "blob"}).then(r=>{
-      console.log(r.data)
       const url = window.URL.createObjectURL(new Blob([r.data]));
       const link = document.createElement('a');
       link.href = url;

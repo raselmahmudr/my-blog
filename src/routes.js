@@ -1,5 +1,4 @@
 import {lazy} from "react";
-import Test from "./pages/test/Text";
 
 // this function function for lazy route load...........
 const ReactLazyPreload  = (importStatementFn)=>{
@@ -33,14 +32,18 @@ export default (isAuth)=>{
     return [
       ...publicRoutes,
       { path: "/admin/dashboard", component:  Dashboard},
-      { path: "/admin/add-post", component:  AddPost}
+      { path: "/admin/add-post", component:  AddPost},
+      {path: "/auth/login", component: HomePage},
+      {path: "/auth/registration", component: HomePage},
     ]
   } else {
     return  [
-      // {path: "/", exact: true, component: LoginHomePage},
       ...publicRoutes,
-      {path: "/auth/login", exact: true, component: Login},
-      {path: "/auth/registration", exact: true, component: Registration},
+      {path: "/auth/login",  component: Login},
+      {path: "/auth/registration", component: Registration},
+      {path: "/admin/dashboard/add-post/null",  component: Login},
+      {path: "/admin/dashboard",  component: Login},
+
     ]
   }
 }

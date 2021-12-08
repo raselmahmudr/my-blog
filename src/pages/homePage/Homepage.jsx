@@ -6,6 +6,7 @@ import "./homepage.scss"
 import {filterPost} from "../../store/actions/postAction";
 import {useDispatch, useSelector} from "react-redux";
 import queryString from "query-string"
+import PreloadLink from "../../components/preloadLink/PreloadLink";
 const Homepage = () => {
     const postState = useSelector(state=>state.postState)
 
@@ -38,8 +39,6 @@ const Homepage = () => {
             dispatch({type: "SEARCH_POSTS", payload: postState.posts})
         }
 
-
-        console.log("ghj")
     }, [history.location.search])
 
     return (
@@ -49,7 +48,7 @@ const Homepage = () => {
            <div className="top_art mx-auto bg-gray-9 bg-opacity-70 rounded flex px-4  ">
                { topArticle.map((ta, i)=>(
                    <li key={i} className="m-1">
-                       <Link className="text-gray-600 text-sm font-medium" to={`/?search=${ta.s}`}>#{ta.label}</Link>
+                       <PreloadLink className="text-gray-600 text-sm font-medium" to={`/?search=${ta.s}`}>#{ta.label}</PreloadLink>
                    </li>
                )) }
            </div>

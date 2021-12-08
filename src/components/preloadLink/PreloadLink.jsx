@@ -40,7 +40,7 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
       "so you can simple use NavLink or Link"
     )
     preloadLinks = []
-    isLoaded(true)
+    // isLoaded(true)
     
     // * just nice delay loading bar
     id = setTimeout(()=>{
@@ -77,11 +77,11 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
     
     
     setLoading(true)
-    isLoaded(false)
-    
-    preloadLinks.push(path)
-    
+    // isLoaded(false)
+    // preloadLinks.push(path)
+
     const component = findComponentForRoute(path, routes(true, "no"));
+
     if (component && component.preload) {
       
       const moduleLoadedPromise = component.preload()
@@ -99,13 +99,15 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
         moduleLoadedPromise.then(()=>{
           if(delay){
             setTimeout(()=>{
-              isLoaded(true)
+              // isLoaded(true)
               setLoading(false)
               preloadLinks = []
+              history.push(path)
             }, delay)
           } else{
-            isLoaded(true)
+            // isLoaded(true)
             setLoading(false)
+            history.push(path)
             preloadLinks = []
           }
     
@@ -125,8 +127,8 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
   }
 
   if(loaded){
-    //? go to last clicked path 
-    history.push(preloadLinks[preloadLinks.length - 1])
+    //? go to last clicked path
+    // history.push(preloadLinks[preloadLinks.length - 1])
     preloadLinks = []
     isLoaded(false)
   }
@@ -144,7 +146,6 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
        { isLoading && <ProgressBar  /> }
         <Link 
           className={isActive ? "active" : ""}
-          to={routeChange}
           onMouseDown={()=> preloadRouteComponent(to) }
           {...rest}
         />

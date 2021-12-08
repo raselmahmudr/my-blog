@@ -5,6 +5,7 @@ import api from "../../apis";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHeart, faUserCircle, faUsers} from "@fortawesome/pro-solid-svg-icons";
+import PreloadLink from "src/components/preloadLink/PreloadLink";
 
 const Post = (props) => {
     const { post, authId } = props
@@ -22,8 +23,8 @@ const Post = (props) => {
 
 
     return (
-        <div>
-            <Link to={`/posts/${post.slug}`}>
+        <div key={post.id}>
+            <PreloadLink  to={`/posts/${post.slug}`}>
                 <div className="bg-gray-9 bg-opacity-50 flex my-2 rounded">
                     <div style={{width: "100px"}} className="post_cover mr-2">
                         <img className="w-full flex post_img" src={fullLink(post.cover)} alt=""/>
@@ -50,7 +51,7 @@ const Post = (props) => {
                         {/*{postDetail && postDetail.id === post.id && renderComments(post.id, post.total_comments)}*/}
                     </div>
                 </div>
-            </Link>
+            </PreloadLink>
         </div>
     );
 };

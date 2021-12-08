@@ -1,4 +1,4 @@
-import {NavLink, useHistory} from "react-router-dom";
+import {Link, NavLink, useHistory} from "react-router-dom";
 import "./navigation.scss"
 import fullLink from "../../utils/fullLink";
 import  React, {useEffect, useState} from "react";
@@ -31,9 +31,12 @@ const Navigation = (props) => {
   
 
   function pushRoute(to){
-    history.push(to)
+    if(to) {
+      history.push(to)
+    }
     setExpandDropdown("")
   }
+
   
   function logoutRoutePush(){
     setExpandDropdown("")
@@ -51,27 +54,32 @@ const Navigation = (props) => {
           { authState.id ? (
             <>
               { authState.role === "admin" && (
-                  <li className="hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
+                  <li className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
                     <FontAwesomeIcon icon={faAdn} className="mr-2 text-gray-800" />
-                    <NavLink to="/admin/dashboard">Dashboard</NavLink>
+                    <PreloadLink onClick={()=>setExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
                   </li>
               ) }
-              <li onClick={()=> pushRoute(`/author/profile/${authState.username}`) } className="hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-1">
-                <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
-                Profile
+              <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-1">
+                <PreloadLink onClick={()=>setExpandDropdown("")}   to={`/author/profile/${authState.username}`}>
+                  <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
+                  Profile
+                </PreloadLink>
               </li>
-              <li onClick={()=> logoutRoutePush("/user/profile") } className="hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
+              <li onClick={()=> logoutRoutePush("/user/profile") } className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
                 <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-gray-800" />
                 Logout
               </li>
             </>
           ) : (
             <li
-            className="hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-1"
-            onClick={()=> pushRoute("/auth/login") }
+            className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-1"
+            // onClick={()=> pushRoute("/auth/login") }
           >
-              <FontAwesomeIcon  className="mr-2 text-gray-800" icon={faSignIn} />
-              Login</li>
+              <PreloadLink onClick={()=>setExpandDropdown("")} to="/auth/login">
+                <FontAwesomeIcon  className="mr-2 text-gray-800" icon={faSignIn} />
+                Login
+                </PreloadLink>
+              </li>
             )
           }
         </div>
@@ -115,7 +123,7 @@ const Navigation = (props) => {
           <div className="nav-logo flex-2">
             <div className="flex flex align-center">
               <div className="brand">
-                <h4><NavLink to="/">My Blog</NavLink></h4>
+                <h4><Link to="/">My Blog</Link></h4>
               </div>
               <div className="nav-search-input_wrapper flex-2">
                 <input
@@ -133,10 +141,10 @@ const Navigation = (props) => {
           </div>
           <div className="nav-center flex-5 md:flex-1">
             <ul className="nav_items flex  justify-end align-center">
-              <li className="nav_item hidden md:block  ">
-                <PreloadLink to="/">
+              <li className="nav_item hidden md:flex  ">
+                <Link to="/">
                   <FontAwesomeIcon icon={faHome} className="text-white" />
-                </PreloadLink>
+                </Link>
               </li>
             </ul>
           </div>
@@ -145,7 +153,8 @@ const Navigation = (props) => {
             <ul className="nav_items flex justify-end">
               <div className="py-2 px-0 flex relative items-center"
                    onMouseLeave={()=>setExpandDropdown("")}
-                   onMouseEnter={()=>setExpandDropdown("user_menu")}>
+                   onMouseEnter={()=>setExpandDropdown("user_menu")}
+                   onClick={()=>setExpandDropdown("user_menu")}>
                 { authState.id && <h4 className="hidden lg:block text-white font-medium mr-0">{authState.first_name}</h4>}
                 <span className="avatar_logo">
                   { authState.id
@@ -163,7 +172,6 @@ const Navigation = (props) => {
         </div>
       </div>
       <div className="h-60" />
-      
     </>
   );
 };

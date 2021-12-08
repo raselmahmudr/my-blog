@@ -3,8 +3,6 @@ import {useStore, useSelector, useDispatch} from "react-redux"
 import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
 import Navigation from "./components/navigation/Navigation";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
 import "./App.scss"
 
@@ -34,6 +32,8 @@ function App(props) {
                  total_visitors: r.data.total_visitor.ids
              }
          })
+      }).catch(ex=>{
+          console.log(ex.message)
       })
   }, [])
   
