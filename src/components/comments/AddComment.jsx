@@ -11,6 +11,7 @@ const AddComment = props =>{
   function handleSubmit(e){
     e.preventDefault()
     onSubmit && onSubmit(newComment)
+    setNewComment({parent_id: "", text: ""})
   }
   return (
       <div>
@@ -19,12 +20,13 @@ const AddComment = props =>{
             onChange={(e)=>setNewComment({...newComment, text: e.target.value})}
             className="input-elem"
             name="text"
+            value={newComment.text}
             placeholder="Post your comment"
             id="text"
           />
           <div className="flex justify-end">
-            {cancelBtn && <button onClick={onCancel} className="btn-sm btn">Cancel</button> }
-            <button onClick={handleSubmit} className="btn btn-sm ml-2">Post</button>
+            {cancelBtn && <button onClick={onCancel} className="btn  btn-primary">Cancel</button> }
+            <button onClick={handleSubmit} className="btn btn-primary  ml-2">Post</button>
           </div>
         </div>
       </div>

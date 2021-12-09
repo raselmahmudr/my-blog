@@ -1,12 +1,14 @@
 import React, {lazy, Suspense} from 'react';
-import AddPost from "./AddPost";
+// import AddPost from "./AddPost";
 import {Switch, Route, NavLink, Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {deletePost, fetchPosts} from "../../store/actions/postAction";
 import api from "../../apis";
 import ProgressBar from "../../components/UI/topProgressBar/TopProgressBar";
+import ReactLazyPreload from "../../utils/ReactLazyPreload";
 
 
+const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
 const Login = lazy(()=>import("src/pages/auth/Login"));
 
 const Dashboard = (props) => {

@@ -7,6 +7,11 @@ import {filterPost} from "../../store/actions/postAction";
 import {useDispatch, useSelector} from "react-redux";
 import queryString from "query-string"
 import PreloadLink from "../../components/preloadLink/PreloadLink";
+
+import Backdrop from "src/components/UI/Backdrop/Backdrop"
+
+import PostSkeleton from "../posts/PostSkeleton";
+
 const Homepage = () => {
     const postState = useSelector(state=>state.postState)
 
@@ -16,6 +21,7 @@ const Homepage = () => {
         { s: "programming", label: "Programming"},
         { s: "web development", label: "Web Development"}
     ]
+
 
     const history = useHistory()
     const dispatch = useDispatch()
@@ -43,17 +49,29 @@ const Homepage = () => {
 
     return (
 
-           <div className="container">
+            <div className="container">
 
-           <div className="top_art mx-auto bg-gray-9 bg-opacity-70 rounded flex px-4  ">
-               { topArticle.map((ta, i)=>(
-                   <li key={i} className="m-1">
-                       <PreloadLink className="text-gray-600 text-sm font-medium" to={`/?search=${ta.s}`}>#{ta.label}</PreloadLink>
-                   </li>
-               )) }
-           </div>
+               <div className="top_art mx-auto bg-gray-9 bg-opacity-70 rounded flex px-4  ">
+                   { topArticle.map((ta, i)=>(
+                       <li key={i} className="m-1">
+                           <PreloadLink className="text-gray-600 text-sm font-medium" to={`/?search=${ta.s}`}>#{ta.label}</PreloadLink>
+                       </li>
+                   )) }
+               </div>
 
-            <Posts />
+
+                <br />
+
+                <Posts />
+                <div className="mx-5">
+                    { postState.posts.length <= 0 && (
+                        new Array(10).fill("1").map((a, index)=>
+                            <li key={index} className="my-3">
+                            <PostSkeleton />
+                        </li>)
+                    ) }
+                </div>
+
 
         </div>
     );

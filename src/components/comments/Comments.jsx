@@ -4,6 +4,8 @@ import fullLink from "../../utils/fullLink";
 import "./comments.scss"
 import AddComment from "./AddComment";
 
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faClock, faHeart, faPen, faReply, faTrash} from "@fortawesome/pro-solid-svg-icons";
 
 const Comments = (props) => {
   const {
@@ -60,28 +62,37 @@ const Comments = (props) => {
       }
       return r
     }
+
+    function handleDeleteComment(id) {
+      handleToggleMoreOption("-1")
+      onDeleteComment && onDeleteComment(user_id, id)
+    }
+
     return (
       <div className="my-4 mt-6">
         <div className="flex">
           <div className="w-5 mr-2">
-            <img className="w-full radius-100" src={fullLink(avatar)}/>
+            <img className="flex w-full radius-100" src={fullLink(avatar)} alt="avatar"/>
           </div>
 
           <div className="comment-body flex-1">
-            <div className="comment-body-text px-2 py-1 bg-gray-light-9 bg-opacity-30 text-sm rounded">
-              <h1><a className="text-blue-600" href="">{username} ID: {id}</a></h1>
+            <div className="comment-body-text px-2 py-1 bg-gray-9 bg-opacity-80 text-sm rounded">
+              <h1><a className="text-blue-600 text-15" href="">{username}
+                {/*ID: {id}*/}
+              </a
+              ></h1>
               {/*<h4 className="text-xs">render timestamp {Date.now().toString()}</h4>*/}
-              <h1>{text}</h1>
+              <h1 className="text-15 mt-1">{text}</h1>
             </div>
-            <div className="comment-action flex mt-1 text-xs items-center">
+            <div className="comment-action flex mt-1 text-xs text-gray-dark-9  items-center">
               <li className="">
-                <i className="fa fa-heart hover:text-primary"/>
+                <FontAwesomeIcon icon={faHeart} className="text-sm hover:text-primary" />
               </li>
               <li className="mx-3">
-                <i onClick={()=>onSetShowReplyCommentForm(id)} className="fa fa-reply mr-1"/>
+                <FontAwesomeIcon icon={faReply} onClick={()=>onSetShowReplyCommentForm(id)} className="text-sm mr-1"/>
               </li>
               <li>
-                <i className="fa fa-clock mr-1"/>
+                <FontAwesomeIcon icon={faClock} onClick={()=>onSetShowReplyCommentForm(id)} className="text-sm mr-1"/>
                 {formatDateTime(new Date(created_at))}
               </li>
               <li className="ml-3  relative">
@@ -89,15 +100,17 @@ const Comments = (props) => {
                       onClick={() => handleToggleMoreOption(id)}>more</span>
                 {showMoreCommentOptionId === id && <div className="bg-white w-40 comment_option absolute shadow_1">
                   <ul className="">
-                    <li className={"px-2 py-1 cursor-pointer hover:bg-primary_light  hover:text-primary flex"}>
-                     <span className="pointer-events-none">
-                      <i className="fa fa-pen mr-1 "/>  Edit comment
+                    <li className={"px-2 py-1 flex-1 cursor-pointer hover:bg-primary_light  hover:text-primary flex"}>
+                     <span className="pointer-events-none  whitespace-nowrap">
+                        <FontAwesomeIcon icon={faPen}  className="text-sm mr-1"/>
+                        <span>Edit comment</span>
                      </span>
                     </li>
-                    <li onClick={()=>onDeleteComment(id)}
+                    <li onClick={()=>handleDeleteComment(id)}
                         className={"px-2 py-1 cursor-pointer hover:bg-primary_light hover:text-primary flex"}>
-                      <span className="pointer-events-none">
-                        <i className="fa fa-trash mr-1"/> Delete comment
+                      <span className="pointer-events-none whitespace-nowrap">
+                        <FontAwesomeIcon icon={faTrash} className="text-sm mr-1"/>
+                          <span>Delete comment</span>
                       </span>
                     </li>
 

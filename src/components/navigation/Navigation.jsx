@@ -23,30 +23,21 @@ import {faAdn} from "@fortawesome/pro-brands-svg-icons";
 
 const Navigation = (props) => {
   
-  const {authState, postState} = props
+  const {authState, postState, expandDropdown, handleSetExpandDropdown } = props
   
   const history = useHistory()
   const dispatch = useDispatch()
-  const [expandDropdown, setExpandDropdown] = useState("")
-  
 
-  function pushRoute(to){
-    if(to) {
-      history.push(to)
-    }
-    setExpandDropdown("")
-  }
 
   
   function logoutRoutePush(){
-    setExpandDropdown("")
     window.localStorage.setItem("token", "")
     dispatch({
       type: "LOGIN",
       payload: {}
     })
   }
-  
+
   function authDropdown(isShow) {
     return isShow && (
       <div className="dropdown_nav">
@@ -56,11 +47,11 @@ const Navigation = (props) => {
               { authState.role === "admin" && (
                   <li className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
                     <FontAwesomeIcon icon={faAdn} className="mr-2 text-gray-800" />
-                    <PreloadLink onClick={()=>setExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
+                    <PreloadLink className="block" onClick={()=>handleSetExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
                   </li>
               ) }
               <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-1">
-                <PreloadLink onClick={()=>setExpandDropdown("")}   to={`/author/profile/${authState.username}`}>
+                <PreloadLink className="block"     to={`/author/profile/${authState.username}`}>
                   <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
                   Profile
                 </PreloadLink>
@@ -72,10 +63,10 @@ const Navigation = (props) => {
             </>
           ) : (
             <li
-            className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-1"
+            className="flex flex-1 items-center hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-1"
             // onClick={()=> pushRoute("/auth/login") }
           >
-              <PreloadLink onClick={()=>setExpandDropdown("")} to="/auth/login">
+              <PreloadLink className="block" to="/auth/login">
                 <FontAwesomeIcon  className="mr-2 text-gray-800" icon={faSignIn} />
                 Login
                 </PreloadLink>
@@ -113,6 +104,22 @@ const Navigation = (props) => {
     }
   }
 
+  function openMenuHandler(e) {
+    if(expandDropdown === "user_menu") {
+      handleSetExpandDropdown("")
+      dispatch({
+        type: "TOGGLE_APPMASK",
+        payload: false
+      })
+    } else {
+      handleSetExpandDropdown("user_menu")
+      dispatch({
+        type: "TOGGLE_APPMASK",
+        payload: true
+      })
+    }
+  }
+
   return (
     <>
       <div className="navigation">
@@ -123,7 +130,10 @@ const Navigation = (props) => {
           <div className="nav-logo flex-2">
             <div className="flex flex align-center">
               <div className="brand">
-                <h4><Link to="/">My Blog</Link></h4>
+                <Link to="/" className="flex">
+                  <img className="w-7 mr-2" src="https://res.cloudinary.com/dbuvg9h1e/image/upload/v1638967729/Asset_2_zadmyf.svg" alt=""/>
+                  <h4>My Blog</h4>
+                </Link>
               </div>
               <div className="nav-search-input_wrapper flex-2">
                 <input
@@ -141,9 +151,9 @@ const Navigation = (props) => {
           </div>
           <div className="nav-center flex-5 md:flex-1">
             <ul className="nav_items flex  justify-end align-center">
-              <li className="nav_item hidden md:flex  ">
-                <Link to="/">
-                  <FontAwesomeIcon icon={faHome} className="text-white" />
+              <li className="nav_item hidden md:flex ">
+                <Link to="/" className="flex">
+                  <FontAwesomeIcon icon={faHome} className="text-md text-white" />
                 </Link>
               </li>
             </ul>
@@ -151,16 +161,21 @@ const Navigation = (props) => {
 
           <div className="nav-auth lg:flex-2">
             <ul className="nav_items flex justify-end">
-              <div className="py-2 px-0 flex relative items-center"
-                   onMouseLeave={()=>setExpandDropdown("")}
-                   onMouseEnter={()=>setExpandDropdown("user_menu")}
-                   onClick={()=>setExpandDropdown("user_menu")}>
+              <div className="px-0 flex relative items-center"
+                   // onMouseLeave={()=>handleSetExpandDropdown("")}
+                   // onMouseEnter={()=>handleSetExpandDropdown("user_menu")}
+                   onClick={openMenuHandler} >
                 { authState.id && <h4 className="hidden lg:block text-white font-medium mr-0">{authState.first_name}</h4>}
                 <span className="avatar_logo">
-                  { authState.id
-                    ? <img className="" src={fullLink( authState.avatar ? authState.avatar : "static/avatar/Alec-Thompson-card_20200415_1603252.10e65779.jpg")} alt=""/> : (
-                          <FontAwesomeIcon icon={faUserCircle} className="text-white" />
-                  )}
+                  { authState.id ? authState.avatar ? (
+                          <img className="" src={fullLink( authState.avatar)} />
+                      ) : (
+                          <FontAwesomeIcon icon={faUserCircle} className="text-xl text-white" />
+                      )
+                      : (
+                          <FontAwesomeIcon icon={faUserCircle} className="text-white text-lg" />
+                      )
+                  }
                 </span>
                 {authDropdown(expandDropdown === "user_menu")}
               </div>

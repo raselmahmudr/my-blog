@@ -27,7 +27,8 @@ export default defineConfig({
     myPlugin()
   ],
   server: {
-    port: 5500
+    port: 5500,
+    host: "0.0.0.0"
   },
   base: "/my-blog/",
   // build: {

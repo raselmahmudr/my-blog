@@ -1,3 +1,4 @@
+@import "src/scss/--breakpoint";
 
 .background_cover{
   //background-image: url(http://localhost:3000/static/logrocket-blog-header.png);
@@ -37,10 +38,16 @@
 .own-post{
   &:hover{
     .action{
-      display: block;
+      display: flex;
     }
   }
   .action{
     display: none;
+  }
+}
+
+.user-content-wrapper{
+  @include down_sm{
+    padding: 0 10px;
   }
 }

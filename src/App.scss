@@ -1,16 +1,25 @@
+
+@import "src/scss/--breakpoint" ;
 ul, li, h1, h3, h2, h4, h5, p{list-style: none; margin: 0; padding: 0; font-weight: 400}
 
 html{
   font-weight: 400;
+  //font-size: 62%;
 }
+body{
+  font-size: 14px;
+  font-family: 'Noto Sans Bengali', 'Roboto', 'Oxygen',  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',  sans-serif;
+}
+
 
 *{
   border-style: solid;
   border-width: 0;
   box-sizing: border-box;
+  font-family: 'Noto Sans Bengali', 'Roboto', 'Oxygen',  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',  sans-serif;
 }
 
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500&display=swap');
 //@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300&display=swap');
 .App{
@@ -49,11 +58,26 @@ html{
   border: none;
   font-size: 14px;
   font-weight: 500;
+  &:hover{
+    box-shadow: 0px 2px 6px -1px #00000078;
+    transition: all .5s ease;
+  }
+  &:active{
+    box-shadow: 5px 4px 6px 0px #00000078;
+    //transition: all .5s ease;
+  }
+  &:focus-visible{
+    box-shadow: 5px 4px 6px 0px #00000078;
+    //transition: all .5s ease;
+  }
 }
 .btn-outline{
   background: transparent;
   border-radius: 100px;
   border: 1px solid var(--primary);
+}
+.btn-info {
+  background-color: #afffb9;
 }
 .btn-sm{
   @apply px-1.5 text-xs py-0.5;
@@ -134,9 +158,19 @@ a{
     font-size: 20px;
   }
 }
+.alert{
+  opacity: 0;
+}
+.alert-fixed{
+  position: fixed;
+  top: 20vh;
+  transform: translateX(-50%);
+  left: 50%;
+  //opacity: 0;
+}
 .error-alert{
   font-size: 14px;
-  background: #ff3e3e2b;
+  background: #ffd2d2;
   margin: auto;
   color: #ff0000;
   width: max-content;
@@ -145,6 +179,16 @@ a{
   box-shadow: -1px 2px 3px 0px #4c4c4c69;
 }
 
+.success-alert{
+  font-size: 14px;
+  background: rgba(111, 114, 216, 1);
+  margin: auto;
+  color: #f1f1f1;
+  width: max-content;
+  border-radius: 3px;
+  padding: 6px 10px;
+  box-shadow: -1px 2px 3px 0px #4c4c4c69;
+}
 
 
 .my-node-enter {
@@ -154,14 +198,46 @@ a{
   opacity: 1;
   transition: opacity 500ms;
 }
+.my-node-enter-done{
+  opacity: 1;
+}
 .my-node-exit {
   opacity: 1;
 }
 .my-node-exit-active {
-  //opacity: 0;
-  //transition: opacity 200ms;
+  opacity: 0;
+  transition: opacity 500ms;
 }
+.my-node-exit-done{
+  opacity: 1;
+}
+
 
  .preload_route_link {
    width: 100% !important;
  }
+
+ .responsive-image{
+   width: 100%;
+   max-width: max-content;
+ }
+ .btn-primary{
+   background: rgba(111, 114, 216, 1);
+   color: white;
+ }
+
+.App-Content-mask{
+  width: 100%;
+  position: fixed;
+  background: transparent;
+  height: 100vh;
+  display: none;
+  z-index: 500;
+}
+.mask__open{
+  display: block;
+ }
+.text-15{font-size: 15px}
+.font-noto{
+  font-family: 'Noto Sans Bengali', 'Roboto', sans-serif;
+}

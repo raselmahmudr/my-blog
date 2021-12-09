@@ -18,6 +18,8 @@
         margin-left: 5px;
         cursor: pointer;
         display: none;
+        width: 10px;
+        fill: white;
       }
       &:hover{
         .delete_btn{
@@ -29,5 +31,25 @@
   input{
     box-sizing: border-box;
     width: 100% !important;
+    outline: none;
+    background: transparent;
   }
+}
+.input-multi-wrapper {
+  display: flex;
+  .ok_button {
+    i{
+      svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+    display: block;
+    position: relative;
+    cursor: pointer;
+    //height: 15px;
+
+
+  }
+
 }

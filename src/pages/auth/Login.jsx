@@ -64,7 +64,7 @@ const Login = (props) => {
           </CSSTransition>
 
           <form onSubmit={handleSubmit} className="py-5">
-            <div className=" flex mb-2">
+            <div className=" flex mb-2 flex-col md:flex-row">
               <label
                   className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4"
                   htmlFor="">Email</label>
@@ -74,7 +74,7 @@ const Login = (props) => {
                 placeholder="Enter Your Email."
                 className="input-elem" type="text" name="email"/>
             </div>
-            <div className="mb-2 flex">
+            <div className="mb-2 flex flex-col md:flex-row ">
               <label className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4 "
                      htmlFor="">Password</label>
               <input
@@ -85,9 +85,11 @@ const Login = (props) => {
                 type="text" name="password"
               />
             </div>
-            <div className="mt-2 mb-3">
+            <div className="mt-2 mb-3 flex flex-col md:flex-row">
               <h4 className="text-sm font-400">Not have a account?
-                <span className="cursor-pointer text-blue-400 p-px ml-0.5 "><Link to="/auth/registration">Create a account new account</Link></span>
+                <span className="cursor-pointer text-blue-400 p-px ml-0.5 ">
+                  <Link to="/auth/registration">Create a account new account</Link>
+                </span>
               </h4>
             </div>
             <div>

@@ -1,19 +1,24 @@
 import React, {lazy} from 'react';
 import {Link, useParams} from "react-router-dom";
-import marked from "marked"
-import hljs from "highlight.js";
-import "highlight.js/styles/atom-one-dark.css"
 
 import "./style.scss"
-import apis from "../../apis";
+import apis, {getApi} from "../../apis";
 import fullLink from "../../utils/fullLink";
 import api from "../../apis";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faHeart} from "@fortawesome/pro-solid-svg-icons";
+import {faClock, faCommentAlt, faEye, faHeart, faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
 import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
 import {faHeart as faHeartLI} from "@fortawesome/pro-regular-svg-icons";
 import {useSelector} from "react-redux";
 import PreloadLink from "src/components/preloadLink/PreloadLink";
+import PostDetailSkeleton from "./PostDetailSkeleton";
+
+import "highlight.js/styles/atom-one-dark.css"
+import {faComment} from "@fortawesome/pro-solid-svg-icons";
+import AddComment from "../../components/comments/AddComment";
+import Comments from "../../components/comments/Comments";
+import {CSSTransition, Transition} from "react-transition-group";
+
 
 
 const PostDetails = (props) => {
@@ -21,7 +26,23 @@ const PostDetails = (props) => {
   let params = useParams()
   const authState = useSelector(state=>state.authState)
   
-  const [postDetails, setPostDetails] = React.useState({mdContent: ""})
+  const [postDetails, setPostDetails] = React.useState({
+    mdContent: "",
+    comments: [],
+    post_id: "",
+    user_id: "",
+    likes: [],
+    tags: []
+  })
+
+  const [loadingState, setLoadingState] = React.useState({
+    id: "add_comment",
+    isLoading: false,
+    status: "", // "error" || "success"
+    message: ""
+  })
+
+  const [isOver, setOver] = React.useState(false)
 
   React.useEffect(async () => {
     let response = await apis.get(`/api/post/${params.slug}`)
@@ -33,33 +54,40 @@ const PostDetails = (props) => {
         ...post
       }
       setPostDetails(updatedPostDetails)
-      let mdContentResponse = await apis.get(`/api/post-content/${post.id}`)
-      if(mdContentResponse.status === 200){
+    }
+  }, [params.slug])
+
+
+  React.useEffect(async ()=>{
+    if(postDetails.id) {
+      let mdContentResponse = await apis.get(`/api/post-content/${postDetails.id}`)
+      if (mdContentResponse.status === 200) {
         setPostDetails({
-          ...updatedPostDetails,
+          ...postDetails,
           mdContent: mdContentResponse.data.mdContent
         })
       }
     }
-  }, [params.slug])
-  
-  React.useEffect(() => {
-    marked.setOptions({
-      renderer: new marked.Renderer(),
-      highlight: function (code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-        return hljs.highlight(code, {language}).value;
-      },
-      pedantic: false,
-      gfm: true,
-      tables: true,
-      breaks: false,
-      sanitize: false,
-      smartLists: true,
-      smartypants: false,
-      xhtml: false
-    });
-  }, [postDetails])
+  }, [postDetails.id])
+
+
+  // React.useEffect(() => {
+  //   marked.setOptions({
+  //     renderer: new marked.Renderer(),
+  //     highlight: function (code, lang) {
+  //       const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+  //       return hljs.highlight(code, {language}).value;
+  //     },
+  //     pedantic: false,
+  //     gfm: true,
+  //     tables: true,
+  //     breaks: false,
+  //     sanitize: false,
+  //     smartLists: true,
+  //     smartypants: false,
+  //     xhtml: false
+  //   });
+  // }, [postDetails])
 
 
   function handleAddLike(post_id) {
@@ -80,9 +108,8 @@ const PostDetails = (props) => {
   }
 
 
-  function postReaction(post) {
-    const [isOver, setOver] = React.useState(false)
-    let youLiked = post.likes?.indexOf(authState.id) !== -1
+  function postReaction({id, likes}) {
+    let youLiked = likes && likes.indexOf(authState.id) !== -1
 
     return (
         <div>
@@ -91,9 +118,10 @@ const PostDetails = (props) => {
               <FontAwesomeIcon icon={youLiked ? faHeart : isOver ? faHeart : faHeartLI}
                  onMouseEnter={()=>setOver(true)}
                  onMouseLeave={()=>setOver(false)}
-                 onClick={(e) => handleAddLike(post.id)}
-                 className={['cursor-pointer hover:text-pink-700', youLiked ? 'text-pink-400 ' : 'text-gray-800'].join(" ")}/>
-              <h4 className="font-normal ml-1">{post.likes ? post.likes.length : '0'}</h4>
+                 onClick={(e) => handleAddLike(id)}
+                 className={['cursor-pointer hover:text-pink-700', youLiked ? 'text-pink-400 ' : 'text-gray-800'].join(" ")}
+              />
+              <h4 className="font-normal ml-1">{likes ? likes.length : '0'}</h4>
             </li>
           </ul>
         </div>
@@ -101,48 +129,156 @@ const PostDetails = (props) => {
   }
 
 
-  return (
-    <div className="container px-15 mt-5">
-
-      {postDetails.author && <div className="post_author_description items-start">
-       <div>
-         <div className="avatar">
-           {postDetails.author.avatar ? (
-               <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
-           // <img src={fullLink(postDetails.author.avatar)} alt=""/>
-           ) : (
-               <FontAwesomeIcon className="text-5xl" icon={faUserCircle} />
-           ) }
-         </div>
-       </div>
-        <div className="user_info">
-          <div className="flex align-center">
-            <h4 className="title">
-              <PreloadLink  to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink></h4>
-            <button className="btn ml-5 btn-outline">Follow</button>
-          </div>
-          <p className="author_desc">{postDetails.author.description}</p>
-        </div>
-      </div>
-      }
-
-
-      <div className="post_detail">
-        <div className="post_meta">
-          <h1 className="title text-3xl">{postDetails.title}</h1>
-          <div className="mt-5 subtitle text-sm">
-            <i className="fa mr-2 fa-clock"/>
-            <span>Create At {new Date(postDetails.created_at).toDateString()}</span>
-          </div>
-        </div>
-
+  function renderMarkdownContent(){
+    return (
         <div className="article">
-          <div className="flex mb-5 justify-center"><img src={fullLink(postDetails.cover)} alt=""/></div>
-
+          {/*<div className="flex mb-5 justify-center"><img src={fullLink(postDetails.cover)} alt=""/></div>*/}
           <div className="code " dangerouslySetInnerHTML={{__html: postDetails.mdContent}}/>
-
           <br/>
+        </div>
+    )
+  }
 
+
+  function postCommentHandler({text, parent_id}){
+
+    setLoadingState({
+      ...loadingState,
+      isLoading: true
+    })
+
+    if(!authState || !authState.id){
+      setLoadingState({
+        id: "add_comment",
+        status: 200,
+        message: "You have to Login first to post comment...",
+        isLoading: false
+      })
+      return
+    }
+
+    let newComment = {
+      text,
+      parent_id: parent_id ? parent_id : null,
+      user_id: authState.id,
+      post_id: postDetails.id,
+      username: authState.username,
+      avatar: authState.avatar
+    }
+
+    getApi().post("/api/comment", newComment).then(r=>{
+      if(r.status >= 200 && r.status < 400){
+        let updatePostDetail = {...postDetails}
+        if(updatePostDetail.comments){
+          updatePostDetail.comments.push(r.data.newComment)
+        } else {
+          updatePostDetail.comments = [r.data.newComment]
+        }
+        setPostDetails(updatePostDetail)
+        setLoadingState({
+          id: "add_comment",
+          status: 200,
+          message: "Your Comment has been posted..",
+          isLoading: false
+        })
+      } else {
+        setLoadingState({
+          id: "add_comment",
+          status: 400,
+          message: "Comment post fail..",
+          isLoading: false
+        })
+      }
+    }).catch(ex=>{
+      setLoadingState({
+        id: "add_comment",
+        status: 400,
+        message: "Comment post fail..",
+        isLoading: false
+      })
+    })
+  }
+
+  function commentDeleteHandler(comment_user_id, comment_id){
+
+    if(authState && comment_user_id !== authState.id){
+      return;
+    }
+
+    setLoadingState({
+      ...loadingState,
+      isLoading: true
+    })
+
+    if(!authState || !authState.id){
+      setLoadingState({
+        id: "add_comment",
+        status: 200,
+        message: "You have to Login first to delete comment...",
+        isLoading: false
+      })
+      return
+    }
+
+
+
+    getApi().delete(`/api/comment?comment_id=${comment_id}&user_id=${authState.id}&post_id=${postDetails.id}`)
+        .then(r=>{
+          if(r.status >= 200 && r.status < 400) {
+            let updatePostDetail = {...postDetails}
+            if (updatePostDetail.comments) {
+              let idx = updatePostDetail.comments.findIndex(c=>c.id === r.data.id)
+              if(idx){
+                updatePostDetail.comments.splice(idx, 1)
+              }
+            }
+            setPostDetails(updatePostDetail)
+            setLoadingState({
+              id: "add_comment",
+              status: 200,
+              message: r.data.message,
+              isLoading: false
+            })
+          } else {
+            setLoadingState({
+              id: "add_comment",
+              status: 400,
+              message: r.data.message,
+              isLoading: false
+            })
+          }
+        })
+        .catch(ex=>{
+          setLoadingState({
+            id: "add_comment",
+            status: 400,
+            message: ex.response.data.message,
+            isLoading: false
+          })
+      })
+
+
+  }
+
+  function renderPostComments(){
+    return (
+        <div>
+          <label className="text-md mb-1" htmlFor="">Write a comment</label>
+          <AddComment onSubmit={postCommentHandler}  />
+
+          <div className="">
+            {postDetails.comments.map(c=>(
+                <Comments onDeleteComment={commentDeleteHandler} comment={c} />
+            ))}
+          </div>
+
+        </div>
+    )
+  }
+
+  function renderPostFooter(){
+    return (
+        <div>
           <div className="flex items-center">
             <div className="flex items-center mb-2">
               {postReaction(postDetails)}
@@ -150,27 +286,140 @@ const PostDetails = (props) => {
             </div>
 
             <div className="flex items-center mb-2 ml-4">
-              <FontAwesomeIcon icon={faEye} />
+              <FontAwesomeIcon icon={faEye} className="text-gray-dark-9" />
               <h4 className="ml-1 text-sm">{postDetails.hits ? postDetails.hits : 0} read</h4>
             </div>
+
+
+            <div className="flex items-center mb-2 ml-4">
+              <FontAwesomeIcon icon={faComment} className="text-blue-500" />
+              <h4 className="ml-1 text-sm">{postDetails.comments ? postDetails.comments.length : 0} comments</h4>
+            </div>
+
           </div>
 
-
-          <div className="post-end-meta flex align-center">
+          <div className="post-end-meta flex items-start">
             <h4 className="title">Tags: </h4>
-            <ul className="flex">
+            <ul className="flex flex-wrap">
               {postDetails.tags && postDetails.tags.map(tag => (
-                <li
-                    className="bg-gray-9 m-2 text-xs py-1 rounded"
-                    key={tag}>
-                  <Link className="text-gray-80 font-medium text-opacity-60" to={`/?search=${tag}`}>#{tag}</Link></li>
+                  <li
+                      className="bg-gray-9 m-0.5 text-xs py-1 rounded"
+                      key={tag}>
+                    <Link className="text-gray-80 font-medium text-opacity-60" to={`/?search=${tag}`}>#{tag}</Link></li>
               ))}
             </ul>
           </div>
 
+          <div className="mt-6">
+            <div className="border-b border-gray-9 mb-4 " />
+
+            { renderPostComments() }
+          </div>
+
+
         </div>
-      </div>
-    
+    )
+  }
+
+  function closeErrorMessage(){
+    setLoadingState({
+      ...loadingState,
+      isLoading: true
+    })
+  }
+
+  function renderAlert(){
+    return (
+        <div className={["fixed alert alert-fixed", loadingState.status === 400 ? "error-alert" : "success-alert"].join(" ")}>
+          <div className="flex justify-between items-center">
+            <h4>{loadingState.message}</h4>
+            <FontAwesomeIcon
+                onClick={closeErrorMessage}
+                icon={faTimesCircle}
+                className="ml-3 text-gray-600 cursor-pointer hover:text-red-500"
+            />
+          </div>
+        </div>
+    )
+  }
+
+  return (
+    <div className="container px-15">
+
+
+      <CSSTransition
+          unmountOnExit={true}
+                     in={!loadingState.isLoading} timeout={450} classNames="my-node">
+        { renderAlert()}
+
+      </CSSTransition>
+
+
+
+
+      { postDetails.id ? (
+          <div className="post_detail">
+            { postDetails.author && <div className="post_author_description items-start">
+                <div className="author_info__avatar">
+                  <div className="avatar">
+                    {postDetails.author.avatar ? (
+                        <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
+                        // <img src={fullLink(postDetails.author.avatar)} alt=""/>
+                    ) : (
+                        <FontAwesomeIcon className="text-5xl" icon={faUserCircle} />
+                    ) }
+                  </div>
+                </div>
+
+                <div className="user_info">
+                  <div className="flex align-center mb-2">
+                    <h4 className="title">
+                      <PreloadLink  to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink></h4>
+                    <button className="btn ml-5 btn-outline">Follow</button>
+                  </div>
+                  <p className="author_desc">{postDetails.author.description}</p>
+                </div>
+              </div>
+            }
+
+
+            {/* post title */}
+            <div className="post_meta mt-4">
+              <h1 className="title text-3xl">{postDetails.title}</h1>
+              <div className="mt-2 mb-4 subtitle text-sm">
+                <FontAwesomeIcon icon={faClock} className="mr-1" />
+                <span>Create at {" "}
+                  {new Date(postDetails.created_at).toDateString()}
+                  {" "} {new Date(postDetails.created_at).toLocaleTimeString()}
+                </span>
+              </div>
+            </div>
+
+            {/* post cover photo */}
+            <div className="flex mb-5 justify-center">
+              <img className="w-full"
+              src={fullLink(postDetails.cover)} alt=""/>
+            </div>
+
+            { postDetails.mdContent && (
+                <>
+                  {renderMarkdownContent()}
+                  {renderPostFooter()}
+                </>
+            ) }
+
+          </div>
+      ) : (
+        <div className="mx-4 mt-4">
+          <PostDetailSkeleton.SkeletonMeta />
+          <PostDetailSkeleton.SkeletonContent />
+        </div>
+      )}
+
+
+      {!postDetails.mdContent && <PostDetailSkeleton.SkeletonContent />}
+
+
     </div>
   );
 };

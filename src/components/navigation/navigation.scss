@@ -4,8 +4,7 @@
   width: 100%;
   padding: 0px 0px;
   z-index: 1000;
-  line-height: 34px;
-  //min-height: 50px;
+  min-height: 50px;
   @apply bg-primary;
   position: fixed;
   top: 0;
@@ -18,6 +17,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    line-height: 50px;
     .nav-item{
       padding: 10px;
       a{
@@ -41,6 +41,7 @@
   .avatar_logo{
     padding: 0 !important;
     width: 30px;
+    display: flex;
       margin-left: 10px;
     img{
       border-radius: 100%;
@@ -63,6 +64,7 @@
   position: absolute;
   top: 35px;
   right: 0;
+  z-index: 1232139872734;
   box-shadow: 1px 3px 10px -1px #484848a6, 1px 3px 5px -1px rgba(220, 220, 220, 0.65), 0px 2px 8px -1px rgba(138, 138, 138, 0.65);
   background: rgb(255, 255, 255);
   li{

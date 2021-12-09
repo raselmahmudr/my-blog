@@ -27,20 +27,20 @@ const Post = (props) => {
             <PreloadLink  to={`/posts/${post.slug}`}>
                 <div className="bg-gray-9 bg-opacity-50 flex my-2 rounded">
                     <div style={{width: "100px"}} className="post_cover mr-2">
-                        <img className="w-full flex post_img" src={fullLink(post.cover)} alt=""/>
+                        <img className="flex w-full post_img" src={fullLink(post.cover)} alt=""/>
                     </div>
                     <div key={post.id} className="">
                         <div className="post-meta">
 
-                            <div className="flex">
-                                <div>
+                            <div className="flex items-center my-1">
+                                <div className="items-center">
                                     {post.author.avatar ? (
-                                        <img className="w-5 rounded-full" src={fullLink(post.author.avatar)} alt=""/>
+                                        <img className="w-5 rounded-full flex" src={fullLink(post.author.avatar)} alt=""/>
                                     ) : (
                                         <FontAwesomeIcon icon={faUserCircle} />
                                     ) }
                                 </div>
-                                <div className="flex justify-between flex-wrap">
+                                <div className="flex justify-between flex-wrap items-center">
                                     <h4 className="ml-1 text-sm mr-1">{post.author.username}</h4>
                                     <span className="text-xs font-medium">Created at : {new Date(post.created_at).toLocaleDateString()}</span>
 
