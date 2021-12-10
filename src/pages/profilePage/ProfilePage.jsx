@@ -178,7 +178,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
                 <div className="container">
-                    <h4 className="title text-lg text-center">{ownPosts.length} Stories
+                    <h4 className="title text-lg text-center mt-4">{ownPosts.length} Stories
                         by {author.first_name} {author.last_name}</h4>
 
 
@@ -189,7 +189,7 @@ const ProfilePage = () => {
                         </div>
                         }
 
-                        <div>
+                        <div className="user-posts mt-4">
                             {ownPosts.map(post => (
 
                                 <div className="">

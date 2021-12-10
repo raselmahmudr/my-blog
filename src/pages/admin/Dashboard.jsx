@@ -3,12 +3,14 @@ import React, {lazy, Suspense} from 'react';
 import {Switch, Route, NavLink, Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {deletePost, fetchPosts} from "../../store/actions/postAction";
-import api from "../../apis";
+import api, {getApi} from "../../apis";
 import ProgressBar from "../../components/UI/topProgressBar/TopProgressBar";
 import ReactLazyPreload from "../../utils/ReactLazyPreload";
 
 
+
 const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
+const DatabaseFiles = ReactLazyPreload(()=>import("./databaseFiles/DatabaseFiles"))
 const Login = lazy(()=>import("src/pages/auth/Login"));
 
 const Dashboard = (props) => {
@@ -19,7 +21,8 @@ const Dashboard = (props) => {
     if(isAuth) {
       return [
         {path: "/admin/dashboard", exact: true, component: DashboardHome},
-        {path: "/admin/dashboard/add-post/:postId", exact: true, component: AddPost}
+        {path: "/admin/dashboard/add-post/:postId", exact: true, component: AddPost},
+        {path: "/admin/dashboard/files", exact: true, component: DatabaseFiles}
       ]
     } else {
       return [
@@ -33,7 +36,7 @@ const Dashboard = (props) => {
     <div className="container px-15">
       <Switch>
         <Suspense fallback={<ProgressBar/>}>
-        {adminRoutes(authState.id).map(route=> <Route {...route} /> )}
+          {adminRoutes(authState.id).map(route=> <Route {...route} /> )}
         </Suspense>
       </Switch>
       
@@ -54,7 +57,8 @@ const DashboardHome = (props)=>{
   }, [])
 
   const adminNav = [
-    { to: "/admin/dashboard/add-post/null", exact: true, text: "Add Post" }
+    { to: "/admin/dashboard/add-post/null", exact: true, text: "Add Post" },
+    { to: "/admin/dashboard/files", exact: true, text: "Database Files" }
   ]
 
   function handlePostDelete(id) {
@@ -62,7 +66,7 @@ const DashboardHome = (props)=>{
   }
 
   function downloadBackup(){
-    api.get("/api/backup", {responseType: "blob"}).then(r=>{
+    getApi().get("/api/backup", {responseType: "blob"}).then(r=>{
       const url = window.URL.createObjectURL(new Blob([r.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -76,9 +80,14 @@ const DashboardHome = (props)=>{
   return (
     <div className="container px-4">
       <h2 className="my-2">Admin Dashboard</h2>
-      {/*{ adminNav.map(nav=>(*/}
-      {/*  <NavLink to={nav.to}>{nav.text}</NavLink>*/}
-      {/*)) }*/}
+
+      <div className="flex dashboard-navigation bg-pink-300 items-center justify-centers shadow_1 mb-4">
+        { adminNav.map(nav=>(
+            <li className="mx-2 py-1.5">
+              <NavLink className="text-white" to={nav.to}>{nav.text}</NavLink>
+            </li>
+        )) }
+      </div>
 
       <button className="btn mb-2" onClick={downloadBackup}>Download server backup Database</button>
 
@@ -86,8 +95,8 @@ const DashboardHome = (props)=>{
       <h4>All Posts</h4>
 
       { postState.posts.map(p=>(
-          <div>
-            <div className="flex justify-between">
+          <div className="my-1">
+            <div className="flex justify-between bg-gray-9 bg-opacity-50 py-2">
               <h4>{p.title}</h4>
               <span>
                 <Link to={`/admin/dashboard/add-post/${p.id}`}><i className="pointer fa fa-pen" /></Link>

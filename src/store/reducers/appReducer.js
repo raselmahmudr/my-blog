@@ -2,7 +2,7 @@ const initialState = {
   isOpenAppMask: false,
   isOpenBackdrop: false,
   visitors: {
-    day_visitors: [],
+    all_time_visit: 0,
     total_visitors: [],
   }
 

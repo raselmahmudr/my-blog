@@ -43,7 +43,7 @@ function App(props) {
          dispatch({
              type: "SET_VISITORS",
              payload: {
-                 day_visitors: r.data.day_visitor.ids,
+                 all_time_visit: r.data.day_visitor.ids,
                  total_visitors: r.data.total_visitor.ids
              }
          })

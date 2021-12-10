@@ -32,7 +32,7 @@ const Post = (props) => {
                     <div key={post.id} className="">
                         <div className="post-meta">
 
-                            <div className="flex items-center my-1">
+                            <div className="flex items-start md:items-center my-1">
                                 <div className="items-center">
                                     {post.author.avatar ? (
                                         <img className="w-5 rounded-full flex" src={fullLink(post.author.avatar)} alt=""/>
@@ -42,7 +42,7 @@ const Post = (props) => {
                                 </div>
                                 <div className="flex justify-between flex-wrap items-center">
                                     <h4 className="ml-1 text-sm mr-1">{post.author.username}</h4>
-                                    <span className="text-xs font-medium">Created at : {new Date(post.created_at).toLocaleDateString()}</span>
+                                    <span className="text-xs font-medium">on {new Date(post.created_at).toLocaleDateString()}</span>
 
                                 </div>
                             </div>
