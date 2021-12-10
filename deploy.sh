@@ -23,6 +23,3 @@ git commit -m 'deploy'
 git push -f https://github.com/rasel-code-dev/my-blog.git master:gh-pages
 
 cd -
-
-
-#

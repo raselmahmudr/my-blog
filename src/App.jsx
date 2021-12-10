@@ -38,6 +38,7 @@ function App(props) {
           loader.parentElement.removeChild(loader)
       }
 
+      
       fetchCurrentAuth(dispatch)
       api.post("/api/add-cookie").then(r=>{
          dispatch({
