@@ -147,9 +147,13 @@ const DatabaseFiles = () => {
         formData.append("dirType", name)
 
         getApi().post("/api/file-upload", formData).then(response=>{
-            console.log(response)
+            if(response.status === 201){
+                console.log(response.data)
+                alert("file upload success")
+            }
 
         }).catch(ex=>{
+            alert("file upload fail")
             console.log(ex.message)
         })
     }

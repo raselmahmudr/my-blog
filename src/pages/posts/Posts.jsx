@@ -73,7 +73,7 @@ const Posts = (props) => {
 
       <div className="px-0">
         <div className="posts_wrapper">
-          <div className="filter_items mt-4">
+          <div className="filter_items mt-0">
             <div className="flex justify-between">
               {/*<h1 className="title text-lg">All Posts</h1>*/}
               {/*{ authState && authState.id && (*/}
@@ -90,7 +90,7 @@ const Posts = (props) => {
             }
           </div>
 
-          <div className="border-b mb-5"/>
+          <div className="border-b mb-2"/>
             <div className="mx-auto flex justify-center">
               { isLoading && <Loader/>  }
             </div>

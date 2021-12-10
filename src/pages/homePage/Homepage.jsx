@@ -19,8 +19,15 @@ const Homepage = () => {
         { s: "javascript", label: "Javascript"},
         { s: "react", label: "React"},
         { s: "programming", label: "Programming"},
-        { s: "web development", label: "Web Development"}
+        { s: "web development", label: "Web Development"},
+        { s: "ফেইসবুক", label: "ফেইসবুক"},
+        { s: "গুগল", label: "গুগল"},
+        { s: "মহাকাশ ", label: "মহাকাশ "},
+        { s: "তথ্যপ্রযুক্তি ", label: "তথ্যপ্রযুক্তি "},
+        { s: "nodejs ", label: "NodeJS "}
+
     ]
+
 
 
     const history = useHistory()

@@ -226,9 +226,10 @@ const PostDetails = (props) => {
         .then(r=>{
           if(r.status >= 200 && r.status < 400) {
             let updatePostDetail = {...postDetails}
+
             if (updatePostDetail.comments) {
               let idx = updatePostDetail.comments.findIndex(c=>c.id === r.data.id)
-              if(idx){
+              if(idx !== -1){
                 updatePostDetail.comments.splice(idx, 1)
               }
             }

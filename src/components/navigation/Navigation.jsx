@@ -45,25 +45,25 @@ const Navigation = (props) => {
           { authState.id ? (
             <>
               { authState.role === "admin" && (
-                  <li className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
+                  <li className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-2">
                     <FontAwesomeIcon icon={faAdn} className="mr-2 text-gray-800" />
                     <PreloadLink className="block" onClick={()=>handleSetExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
                   </li>
               ) }
-              <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-1">
+              <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-2">
                 <PreloadLink className="block"     to={`/author/profile/${authState.username}`}>
                   <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
                   Profile
                 </PreloadLink>
               </li>
-              <li onClick={()=> logoutRoutePush("/user/profile") } className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-1">
+              <li onClick={()=> logoutRoutePush("/user/profile") } className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-2">
                 <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-gray-800" />
                 Logout
               </li>
             </>
           ) : (
             <li
-            className="flex flex-1 items-center hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-1"
+            className="flex flex-1 items-center hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-2"
             // onClick={()=> pushRoute("/auth/login") }
           >
               <PreloadLink className="block" to="/auth/login">

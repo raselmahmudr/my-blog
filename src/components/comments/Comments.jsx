@@ -42,12 +42,13 @@ const Comments = (props) => {
   
   function renderComment({id, text, post_id, user_id, created_at, reply=false, child_comment_count, username, avatar}) {
     function formatDateTime(created) {
-      let now = new Date();
+      let now = new Date()
       let sec = 1000;
       let min = sec * 60
       let hour = min * 60
       let day = hour * 24
       let mili = now - new Date(created)
+
       let r = ""
       if(Math.floor(mili / day)){
         r = Math.floor(mili / day) + " day ago"
