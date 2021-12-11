@@ -115,7 +115,10 @@ const Navigation = (props) => {
       handleSetExpandDropdown("user_menu")
       dispatch({
         type: "TOGGLE_APPMASK",
-        payload: true
+        payload: {
+          as: "transparent",
+          isOpen: true
+        }
       })
     }
   }

@@ -81,7 +81,10 @@ function App(props) {
              className="App-Content">
                 <div onClick={handleCloseAuthMenu}
                       className={["App-Content-mask",
-                          appState.isOpenAppMask ? "mask__open" : "mask__close"].join(" ")}>         </div>
+                        appState.appMask.isOpen ? "mask__open" : "mask__close",
+                        appState.appMask.as === "transparent" ? "mask_transparent": "mask__backdrop"
+                      ].join(" ")}>
+                </div>
                   <div className="viewport">
                       <Switch>
                           <Suspense fallback={<ProgressBar/>}>

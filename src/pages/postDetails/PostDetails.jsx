@@ -6,7 +6,7 @@ import apis, {getApi} from "../../apis";
 import fullLink from "../../utils/fullLink";
 import api from "../../apis";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faCommentAlt, faEye, faHeart, faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
+import {faClock,  faEye, faHeart } from "@fortawesome/pro-solid-svg-icons";
 import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
 import {faHeart as faHeartLI} from "@fortawesome/pro-regular-svg-icons";
 import {useSelector} from "react-redux";
@@ -17,7 +17,9 @@ import "highlight.js/styles/atom-one-dark.css"
 import {faComment} from "@fortawesome/pro-solid-svg-icons";
 import AddComment from "../../components/comments/AddComment";
 import Comments from "../../components/comments/Comments";
-import {CSSTransition, Transition} from "react-transition-group";
+
+
+import AlertHandler from "../../components/AlertHandler/AlertHandler";
 
 
 
@@ -329,96 +331,78 @@ const PostDetails = (props) => {
     })
   }
 
-  function renderAlert(){
-    return (
-        <div className={["fixed alert alert-fixed", loadingState.status === 400 ? "error-alert" : "success-alert"].join(" ")}>
-          <div className="flex justify-between items-center">
-            <h4>{loadingState.message}</h4>
-            <FontAwesomeIcon
-                onClick={closeErrorMessage}
-                icon={faTimesCircle}
-                className="ml-3 text-gray-600 cursor-pointer hover:text-red-500"
-            />
-          </div>
-        </div>
-    )
-  }
+
 
   return (
     <div className="container px-15">
-
-
-      <CSSTransition
-          unmountOnExit={true}
-                     in={!loadingState.isLoading} timeout={450} classNames="my-node">
-        { renderAlert()}
-
-      </CSSTransition>
-
-
-
-
-      { postDetails.id ? (
-          <div className="post_detail">
-            { postDetails.author && <div className="post_author_description items-start">
-                <div className="author_info__avatar">
-                  <div className="avatar">
-                    {postDetails.author.avatar ? (
-                        <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
-                        // <img src={fullLink(postDetails.author.avatar)} alt=""/>
-                    ) : (
-                        <FontAwesomeIcon className="text-5xl" icon={faUserCircle} />
-                    ) }
-                  </div>
-                </div>
-
-                <div className="user_info">
-                  <div className="flex align-center mb-2">
-                    <h4 className="title">
-                      <PreloadLink  to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink></h4>
-                    <button className="btn ml-5 btn-outline">Follow</button>
-                  </div>
-                  <p className="author_desc">{postDetails.author.description}</p>
-                </div>
-              </div>
-            }
-
-
-            {/* post title */}
-            <div className="post_meta mt-4">
-              <h1 className="title text-3xl">{postDetails.title}</h1>
-              <div className="mt-2 mb-4 subtitle text-sm">
-                <FontAwesomeIcon icon={faClock} className="mr-1" />
-                <span>Create at {" "}
-                  {new Date(postDetails.created_at).toDateString()}
-                  {" "} {new Date(postDetails.created_at).toLocaleTimeString()}
-                </span>
+  
+  
+      <AlertHandler message={loadingState.message} isShown={!loadingState.isLoading} onClick={closeErrorMessage} status={200}/>
+  
+  
+      {postDetails.id ? (
+        <div className="post_detail">
+          {postDetails.author && <div className="post_author_description items-start">
+            <div className="author_info__avatar">
+              <div className="avatar">
+                {postDetails.author.avatar ? (
+                  <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
+                  // <img src={fullLink(postDetails.author.avatar)} alt=""/>
+                ) : (
+                  <FontAwesomeIcon className="text-5xl" icon={faUserCircle}/>
+                )}
               </div>
             </div>
-
-            {/* post cover photo */}
-            <div className="flex mb-5 justify-center">
-              <img className="w-full"
-              src={fullLink(postDetails.cover)} alt=""/>
+        
+            <div className="user_info">
+              <div className="flex align-center mb-2">
+                <h4 className="title">
+                  <PreloadLink
+                    to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink>
+                </h4>
+                <button className="btn ml-5 btn-outline">Follow</button>
+              </div>
+              <p className="author_desc">{postDetails.author.description}</p>
             </div>
-
-            { postDetails.mdContent && (
-                <>
-                  {renderMarkdownContent()}
-                  {renderPostFooter()}
-                </>
-            ) }
-
           </div>
+          }
+      
+      
+          {/* post title */}
+          <div className="post_meta mt-4">
+            <h1 className="title text-3xl">{postDetails.title}</h1>
+            <div className="mt-2 mb-4 subtitle text-sm">
+              <FontAwesomeIcon icon={faClock} className="mr-1"/>
+              <span>Create at {" "}
+                {new Date(postDetails.created_at).toDateString()}
+                {" "} {new Date(postDetails.created_at).toLocaleTimeString()}
+                </span>
+            </div>
+          </div>
+      
+          {/* post cover photo */}
+          <div className="flex mb-5 justify-center">
+            <img className="w-full"
+                 src={fullLink(postDetails.cover)} alt=""/>
+          </div>
+      
+          {postDetails.mdContent && (
+            <>
+              {renderMarkdownContent()}
+              {renderPostFooter()}
+            </>
+          )}
+    
+        </div>
       ) : (
         <div className="mx-4 mt-4">
-          <PostDetailSkeleton.SkeletonMeta />
-          <PostDetailSkeleton.SkeletonContent />
+          <PostDetailSkeleton.SkeletonMeta/>
+          <PostDetailSkeleton.SkeletonContent/>
         </div>
       )}
-
-
-      {!postDetails.mdContent && <PostDetailSkeleton.SkeletonContent />}
+  
+  
+      {!postDetails.mdContent && <PostDetailSkeleton.SkeletonContent/>}
 
 
     </div>

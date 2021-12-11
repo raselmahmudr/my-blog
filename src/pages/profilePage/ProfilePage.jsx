@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {Link, useHistory, useParams} from "react-router-dom";
 import api from "../../apis";
 
@@ -16,6 +16,10 @@ import blobToBase64 from "../../utils/blobToBase64";
 import PreloadLink from "../../components/preloadLink/PreloadLink";
 import ProfileSkeleton from "./ProfileSkeleton";
 import parseTextToHtml from "../../utils/parseTextToHtml";
+import ReactLazyPreload from "../../utils/ReactLazyPreload";
+import {SwitchTransition} from "react-transition-group";
+
+const ProfileEditor = ReactLazyPreload(()=>import("./ProfileEditor"));
 
 const ProfilePage = () => {
     const params = useParams()
@@ -103,9 +107,11 @@ const ProfilePage = () => {
         }
     }, [])
 
+   
+
     return (
              author.id ? <div>
-
+                
                 <div className="profile_hero_header background_cover"
                      style={{backgroundImage: `url(${renderCoverPhoto()})`}}>
                     <div className="relative overlay">
@@ -223,6 +229,11 @@ const ProfilePage = () => {
 
                             ))}
                         </div>
+                        { authState && author && author.id === authState.id &&
+                            <Suspense fallback={<div></div>}>
+                                <ProfileEditor dispatch={dispatch} author={author}/>
+                            </Suspense>
+                        }
                     </div>
                 </div>
 

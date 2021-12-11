@@ -1,5 +1,5 @@
 import api from "../../apis/index";
-
+import axios from "axios"
 
 
 export const fetchCurrentAuth = (dispatch) => {
@@ -8,6 +8,18 @@ export const fetchCurrentAuth = (dispatch) => {
       dispatch({
         type: "LOGIN",
         payload: response.data
+      })
+    }
+  }).catch(err=>{
+    if(!err.response && !err.status){
+      console.log("server are sleeping...")
+      axios.get("https://rsl-blog-server.herokuapp.com/pink").then(res=>{
+        console.log(res)
+        if(res) {
+          location.reload();
+        }
+      }).catch(err=>{
+        console.log("******api server closed******")
       })
     }
   })

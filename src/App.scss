@@ -229,10 +229,15 @@ a{
 .App-Content-mask{
   width: 100%;
   position: fixed;
-  background: transparent;
   height: 100vh;
   display: none;
   z-index: 500;
+}
+.mask__backdrop{
+  background: #1a1a1acc;
+}
+.mask__transparent{
+  background: transparent;
 }
 .mask__open{
   display: block;

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import fullLink from "../../utils/fullLink";
 
 import "./comments.scss"
