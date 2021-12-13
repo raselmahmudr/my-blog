@@ -82,12 +82,12 @@ const Footer = () => {
 
             </div>
             {/*<h4 className="title text-md text-white">Project Start ON {new Date(start).toLocaleString()}</h4>*/}
-            <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded">
+            {/* <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded">
                 <div className="flex items-center justify-center text-gray-900  mt-4 md:mt-0">
                     <h4 className="px-2 py-1 text-sm font-normal">Total Visitor {appState.visitors.total_visitors && appState.visitors.total_visitors.length > 0 ? appState.visitors.total_visitors.length: 0}  </h4>
                     <h4 className="px-2 py-1 font-normal text-sm">All Time Hits {appState.visitors.all_time_visit  ? appState.visitors.all_time_visit : 0}  </h4>
                 </div>
-            </div>
+            </div> */}
         </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import axios from "axios";
 
-export const backend = "http://localhost:3300"
+// export const backend = "http://localhost:3300"
 // export const backend = "http://localhost:5000"
 // export const backend = "https://rsl-blog-server.herokuapp.com"
+export const backend = "https://rsl-blog-server-1.herokuapp.com"
 
 
 

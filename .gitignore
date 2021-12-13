@@ -1,5 +1,4 @@
-yarn-error.log
 node_modules
-.idea
-.vscode
-
+previews
+dist
+deploy.sh

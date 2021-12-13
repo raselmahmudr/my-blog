@@ -22,7 +22,7 @@ import Comments from "../../components/comments/Comments";
 import AlertHandler from "../../components/AlertHandler/AlertHandler";
 
 
-
+let id;
 const PostDetails = (props) => {
 
   let params = useParams()
@@ -39,11 +39,25 @@ const PostDetails = (props) => {
 
   const [loadingState, setLoadingState] = React.useState({
     id: "add_comment",
-    isLoading: false,
+    isShown: false,
     status: "", // "error" || "success"
     message: ""
   })
 
+  React.useEffect(()=>{
+    if(loadingState.isShown) {
+     id = setTimeout(() => {
+        setLoadingState({
+          ...loadingState,
+          isShown: false
+        })
+      }, 2000)
+    }
+    return()=>{
+      id && clearTimeout(id)
+    }
+  }, [loadingState.isShown])
+  
   const [isOver, setOver] = React.useState(false)
 
   React.useEffect(async () => {
@@ -93,20 +107,47 @@ const PostDetails = (props) => {
 
 
   function handleAddLike(post_id) {
-    if (authState.id) {
-      api.post("/api/toggle-like", {post_id: post_id, user_id: authState.id}).then(r => {
-        if (r.status === 201) {
-          let post = r.data.post
-          setPostDetails({
-            ...postDetails,
-            likes: post.likes
-          })
-        }
+    if(!authState || !authState.id){
+    
+      setLoadingState({
+        id: "add_comment",
+        status: 200,
+        message: "You have to Login first to Like post",
+        isShown: true
       })
-
-    } else {
-      alert("You have to login first to like this post")
+      return
     }
+    
+    getApi().post("/api/toggle-like", {post_id: post_id, user_id: authState.id}).then(r => {
+      if (r.status === 201) {
+        let post = r.data.post
+        setLoadingState({
+          id: "add_comment",
+          status: 200,
+          message: "You like this post",
+          isShown: true
+        })
+        setPostDetails({
+          ...postDetails,
+          likes: post.likes
+        })
+      } else {
+        setLoadingState({
+          id: "add_comment",
+          status: 400,
+          message: "Like post fail..",
+          isShown: true
+        })
+      }
+    }).catch(er=>{
+      setLoadingState({
+        id: "add_comment",
+        status: 400,
+        message: "Like post fail..",
+        isShown: true
+      })
+    })
+    
   }
 
 
@@ -146,15 +187,26 @@ const PostDetails = (props) => {
 
     setLoadingState({
       ...loadingState,
-      isLoading: true
+      isShown: false
     })
-
+    
     if(!authState || !authState.id){
+   
       setLoadingState({
         id: "add_comment",
         status: 200,
         message: "You have to Login first to post comment...",
-        isLoading: false
+        isShown: true
+      })
+      return
+    }
+    
+    if(!text){
+      setLoadingState({
+        id: "add_comment",
+        status: 400,
+        message: "Empty comment are not accept",
+        isShown: true
       })
       return
     }
@@ -181,14 +233,14 @@ const PostDetails = (props) => {
           id: "add_comment",
           status: 200,
           message: "Your Comment has been posted..",
-          isLoading: false
+          isShown: true
         })
       } else {
         setLoadingState({
           id: "add_comment",
           status: 400,
           message: "Comment post fail..",
-          isLoading: false
+          isShown: true
         })
       }
     }).catch(ex=>{
@@ -196,7 +248,7 @@ const PostDetails = (props) => {
         id: "add_comment",
         status: 400,
         message: "Comment post fail..",
-        isLoading: false
+        isShown: true
       })
     })
   }
@@ -327,7 +379,7 @@ const PostDetails = (props) => {
   function closeErrorMessage(){
     setLoadingState({
       ...loadingState,
-      isLoading: true
+      isShown: false
     })
   }
 
@@ -337,7 +389,7 @@ const PostDetails = (props) => {
     <div className="container px-15">
   
   
-      <AlertHandler message={loadingState.message} isShown={!loadingState.isLoading} onClick={closeErrorMessage} status={200}/>
+      <AlertHandler message={loadingState.message} isShown={loadingState.isShown} onClick={closeErrorMessage} status={200}/>
   
   
       {postDetails.id ? (
