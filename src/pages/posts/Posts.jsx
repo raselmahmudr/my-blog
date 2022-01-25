@@ -3,7 +3,7 @@ import React, {useEffect} from "react";
 import queryString from "query-string"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import "./styles.scss";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {deletePost, fetchPosts, filterPost} from "../../store/actions/postAction";
 import Loader from "../../components/UI/Loader";
 import {faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
@@ -12,6 +12,8 @@ import Post from "./Post";
 const Posts = (props) => {
   const [isLoading, setLoading] = React.useState(false)
 
+  const location = useLocation()
+  
   const {postState, authState} = props
   const [postDetail, setPostDetail] = React.useState({})
   const [commentPagination, setCommentPagination] = React.useState({
@@ -27,10 +29,10 @@ const Posts = (props) => {
   useEffect(()=>{
     if(postState.posts.length < 1) {
       setLoading(true)
-      fetchPosts(dispatch, () => setLoading(false))
+      fetchPosts(dispatch, location.pathname, () => setLoading(false))
     }
   }, [])
-
+  
 
   // useEffect(async () => {
   //   let val = qs.search
@@ -66,7 +68,7 @@ const Posts = (props) => {
       console.log(isDeleted)
     })
   }
-
+  
   
   return (
     <div>
@@ -96,7 +98,7 @@ const Posts = (props) => {
             </div>
             {
               postState.searchResultPosts.length <= 0 ? (
-              <h4 className="title text-sm">not posts matched with {postState.searchValue}</h4>
+              <h4 className="title text-sm"> {!isLoading && `not posts matched with ${postState.searchValue}` }</h4>
               ) : postState.searchResultPosts.map(post => (
                   <Post post={post} authId={authState.id} />
               ))

@@ -10,15 +10,15 @@ const Registration = ReactLazyPreload(()=>import("./pages/auth/Registration"));
 // const LoginHomePage = ReactLazyPreload(()=>import("./pages/loginHomePage/LoginHomePage"));
 const PostDetailSimple = ReactLazyPreload(()=>import("./pages/postDetails/PostDetailSimple"));
 // const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
-import AddPost from "src/pages/admin/AddPostSimple";
+const ForgetPassword = ReactLazyPreload(()=>import("src/pages/auth/ForgetPassword"));
 const Dashboard = ReactLazyPreload(()=>import("src/pages/admin/Dashboard"));
 const Profile = ReactLazyPreload(()=>import("src/pages/profilePage/ProfilePage"));
 
 
 const publicRoutes = [
   {path: "/", exact: true, component: HomePage},
-  {path: "/author/profile/:username", exact: true, component: Profile},
-  {path: "/posts/:slug", exact: true, component: PostDetailSimple},
+  {path: "/author/profile/:username/:id", exact: true, component: Profile},
+  {path: "/posts/:slug/:id", exact: true, component: PostDetailSimple},
   {path: "/about", exact: true, component: About}
 ]
 
@@ -35,6 +35,7 @@ export default (isAuth)=>{
     return  [
       ...publicRoutes,
       {path: "/auth/login",  component: Login},
+
       {path: "/auth/registration", component: Registration},
       {path: "/admin/dashboard/add-post/null",  component: Login},
       {path: "/admin/dashboard",  component: Login},

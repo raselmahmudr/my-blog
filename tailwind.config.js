@@ -58,7 +58,8 @@
               colors: {
                 "primary": "#6f72d8",
                 gray: {
-                  "9": "#eeeeee"
+                  "9": "#eeeeee",
+                  "10": "#f5f5f5",
                 },
                 "gray-dark": {
                   "9": "#8c8c8c"
@@ -75,6 +76,9 @@
                 300: "300px",
                 900: "900px",
                 1000: "1000px"
+              },
+              minHeight: {
+                40: "40px"
               },
               zIndex: {
                 500: "500",

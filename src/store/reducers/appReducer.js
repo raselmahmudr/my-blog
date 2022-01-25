@@ -5,8 +5,8 @@ const initialState = {
   },
   isOpenBackdrop: false,
   visitors: {
-    all_time_visit: 0,
-    total_visitors: [],
+    day_visitor: 0,
+    total_visitors: 0,
   }
 }
 

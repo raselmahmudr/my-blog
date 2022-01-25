@@ -6,7 +6,6 @@ import "./profile_page.scss"
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 
-import queryString from "query-string";
 import fullLink from "../../utils/fullLink";
 import {useDispatch, useSelector} from "react-redux";
 import {deletePost} from "../../store/actions/postAction";
@@ -17,20 +16,19 @@ import PreloadLink from "../../components/preloadLink/PreloadLink";
 import ProfileSkeleton from "./ProfileSkeleton";
 import parseTextToHtml from "../../utils/parseTextToHtml";
 import ReactLazyPreload from "../../utils/ReactLazyPreload";
-import {SwitchTransition} from "react-transition-group";
+
 
 const ProfileEditor = ReactLazyPreload(()=>import("./ProfileEditor"));
 
 const ProfilePage = () => {
     const params = useParams()
-    const history = useHistory()
+
     const dispatch = useDispatch()
     const authState = useSelector(state=>state.authState)
 
     const profilePhotoInput = React.useRef()
     const profileCoverPhotoInput = React.useRef()
 
-    let query = queryString.parse(history.location.search)
     let [author, setAuthor] = React.useState({})
     let [ownPosts, setOwnPosts] = React.useState([])
 
@@ -41,7 +39,7 @@ const ProfilePage = () => {
 
 
     React.useEffect(async ()=>{
-        let response = await api.get(`/api/users?username=${params.username}`)
+        let response = await api.get(`/api/users/${params.id}`)
         if(response.status === 200){
             setAuthor(response.data.user)
 
@@ -51,8 +49,11 @@ const ProfilePage = () => {
             }
 
         }
-    }, [query.username])
+    }, [params.id])
+    
 
+    
+    
     function deletePostHandler(id) {
         dispatch(deletePost(id))
         setOwnPosts(ownPosts.filter(p=>p.id !== id))
@@ -65,6 +66,8 @@ const ProfilePage = () => {
             ? 'api/upload-profile-photo' 
             : 'api/upload-profile-cover-photo'}`, data).then(r=>{
             console.log(r)
+        }).catch(ex=>{
+            // console.log(ex)
         })
     }
 
@@ -123,6 +126,7 @@ const ProfilePage = () => {
                             onClick={() => profileCoverPhotoInput.current && profileCoverPhotoInput.current.click()}
                             className="absolute right-2 top-2 btn bg-opacity-40 btn-outline text-white text-sm ">Change
                             Cover</button>}
+                        
                         <div className="container-1000 mt-0 mx-auto text-center overlay-title ">
                             <div className="relative">
                                 <div className="post_cover text-center m-auto relative" style={{width: "100px"}}>
@@ -149,7 +153,7 @@ const ProfilePage = () => {
                                 <h1>{author.first_name} {author.last_name}</h1>
                                 {/*<p className="leading-6 text-opacity-90 text-white">{author.description}</p>*/}
                                 <p className="leading-6 text-opacity-90 text-white"
-                                    dangerouslySetInnerHTML={{__html: author.description && parseTextToHtml(author.description)}}
+                                    dangerouslySetInnerHTML={{__html: author.about_you && parseTextToHtml(author.about_you)}}
                                 >
                                 </p>
                                 <div className="social flex justify-center">
@@ -195,10 +199,11 @@ const ProfilePage = () => {
                         </div>
                         }
 
+                        {/*// own posts start..........*/}
+                        {/*// own posts end..........*/}
                         <div className="user-posts mt-4">
-                            {ownPosts.map(post => (
-
-                                <div className="">
+                            {ownPosts.map((post) => (
+                                <div key={post.id} className="bg-gray-10 p-2 my-1">
                                     <div className="flex own-post ">
 
                                         <div className="mr-2 post_cover" style={{width: "100px"}}>
@@ -206,7 +211,7 @@ const ProfilePage = () => {
                                         </div>
 
                                         <div className="flex w-full justify-between  flex-12">
-                                            <PreloadLink to={`/posts/${post.slug}`}>
+                                            <PreloadLink to={`/posts/${post.slug}/${post.id}`}>
                                                 <h4 className="hover:text-primary">{post.title}</h4>
                                             </PreloadLink>
                                             {(author && author.id) === (authState && authState.id) && (
@@ -229,6 +234,7 @@ const ProfilePage = () => {
 
                             ))}
                         </div>
+                        
                         { authState && author && author.id === authState.id &&
                             <Suspense fallback={<div></div>}>
                                 <ProfileEditor dispatch={dispatch} author={author}/>

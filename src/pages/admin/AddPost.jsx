@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, useParams} from "react-router-dom";
+import {Link, useParams, useHistory} from "react-router-dom";
 
 import "./addPost.scss"
 import {fetchPostById, fetchPostMdContent, fetchRawMdContent} from "src/store/actions/postAction";
@@ -32,6 +32,8 @@ const AddPost = (props) => {
   })
   const imageInputRef = React.useRef(null)
   const coverPhotoInputRef = React.useRef(null)
+
+  const history = useHistory()
 
 
   const [markdown_string, setMarkdown_string] = React.useState("")
@@ -73,14 +75,6 @@ const AddPost = (props) => {
           isUpdated: true
         })
       })
-      fetchRawMdContent(params.postId, dispatch, (content)=>{
-        setMarkdown_string(content)
-      })
-    }
-  }, [params.postId])
-
-  React.useEffect(()=>{
-    if(params.postId !== "null"){
       fetchRawMdContent(params.postId, dispatch, (content)=>{
         setMarkdown_string(content)
       })
@@ -258,7 +252,7 @@ const AddPost = (props) => {
   function inputWrapper() {
     return (
         <div className="input_wrapper input-elem flex justify-between">
-          <input name="cover_url" onChange={handleChange} className="outline-none w-full" type="text" placeholder="Paster image full url" />
+          <input name="cover_url" onChange={handleChange} value={post.cover} className="outline-none w-full" type="text" placeholder="Paster image full url" />
           <button onClick={()=>coverPhotoInputRef.current && coverPhotoInputRef.current.click()} className="cursor-pointer">Upload</button>
         </div>
     )
@@ -267,16 +261,14 @@ const AddPost = (props) => {
   return (
     <div className="container px-2 mt-2 ">
       <div>
-        <button className="btn">
-          <Link to="/admin/dashboard">Back to Dashboard</Link>
-        </button>
+        <button onClick={()=> history.goBack() } className="btn">Back to Profile</button>
       </div>
       <h1 className="title text-lg text-center font-bold">{post.isUpdated ? "Update Post" : "Add New Post"}</h1>
 
 
       {loadingState.id === "addpost" &&
         <CSSTransition unmountOnExit={true} in={loadingState.message} timeout={450} classNames="my-node">
-          <div className={loadingState.status === 400 ? "error-alert" : "success-alert"}>
+          <div className={["alert-message", loadingState.status === 400 ? "error-alert" : "success-alert"].join(" ")}>
             <h4>{loadingState.message}</h4>
           </div>
         </CSSTransition>

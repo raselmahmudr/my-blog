@@ -29,14 +29,14 @@ export const loginUser = (userData, dispatch, cb)=> {
 
   api.post("/api/auth/login", {email: userData.email, password: userData.password})
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           dispatch({
             type: "LOGIN",
             payload: response.data
           })
             cb(false)
         } else {
-            response(response.data.message)
+            cb(response.data.message)
         }
       })
   .catch(err=> {
@@ -55,7 +55,7 @@ export const loginUser = (userData, dispatch, cb)=> {
     //     id: "1",
     //     username: "rasel",
     //     email: "raselmr005@gmail.com",
-    //     avatar: "",
+    //     avataa
     //     role: "admin"
     //   }
     // })

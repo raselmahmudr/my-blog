@@ -5,7 +5,9 @@ import "./comments.scss"
 import AddComment from "./AddComment";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faClock, faHeart, faPen, faReply, faTrash} from "@fortawesome/pro-solid-svg-icons";
+import {faClock, faHeart, faPen, faReply, faTrash, faUserCircle} from "@fortawesome/pro-solid-svg-icons";
+import {faUser} from "@fortawesome/pro-regular-svg-icons";
+import PreloadLink from "../preloadLink/PreloadLink";
 
 const Comments = (props) => {
   const {
@@ -73,14 +75,17 @@ const Comments = (props) => {
       <div className="my-4 mt-6">
         <div className="flex">
           <div className="w-5 mr-2">
-            <img className="flex w-full radius-100" src={fullLink(avatar)} alt="avatar"/>
+            {avatar ?
+              <img className="flex w-full radius-100" src={fullLink(avatar)} alt="avatar"/>
+              :  <FontAwesomeIcon icon={faUserCircle} className="text-gray-500 text-md hover:text-primary" />
+               }
           </div>
 
           <div className="comment-body flex-1">
             <div className="comment-body-text px-2 py-1 bg-gray-9 bg-opacity-80 text-sm rounded">
-              <h1><a className="text-blue-600 text-15" href="">{username}
+              <h1><PreloadLink to={`/author/profile/${username}/${user_id}`} className="text-blue-600 text-15" href="">{username}
                 {/*ID: {id}*/}
-              </a
+              </PreloadLink
               ></h1>
               {/*<h4 className="text-xs">render timestamp {Date.now().toString()}</h4>*/}
               <h1 className="text-15 mt-1">{text}</h1>

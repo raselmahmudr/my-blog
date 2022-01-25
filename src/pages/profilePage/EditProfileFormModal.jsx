@@ -12,6 +12,7 @@ function EditProfileFormModal(props) {
 	const [userProfile, setUserProfile] = React.useState({
 		username: "",
 		email: "",
+		about_you: "",
 		first_name: "",
 		last_name: "",
 		oldPassword: "",
@@ -25,6 +26,7 @@ function EditProfileFormModal(props) {
 			email: author.email,
 			first_name: author.first_name,
 			last_name: author.last_name,
+			about_you: author.about_you,
 		})
 	}, [author])
 	
@@ -52,7 +54,8 @@ function EditProfileFormModal(props) {
 			username: userProfile.username ? userProfile.username.trim() : '',
 			email: userProfile.email ? userProfile.email.trim() : '',
 			first_name: userProfile.first_name ? userProfile.first_name.trim() : '',
-			last_name: userProfile.last_name ? userProfile.last_name.trim() : ''
+			last_name: userProfile.last_name ? userProfile.last_name.trim() : '',
+			about_you: userProfile.about_you ? userProfile.about_you.trim() : ''
 		}
 		
 		if (userProfile.oldPassword && userProfile.newConfirmPassword && userProfile.newConfirmPassword ) {
@@ -83,7 +86,8 @@ function EditProfileFormModal(props) {
 						last_name: "",
 						oldPassword: "",
 						newPassword: "",
-						newConfirmPassword: ""
+						newConfirmPassword: "",
+						about_you: ""
 					})
 				}, 200)
 			} else {
@@ -98,7 +102,6 @@ function EditProfileFormModal(props) {
 				message: ex.response && ex.response.data.message ? ex.response.data.message : ex.message
 			})
 		})
-		
 	}
 	
 	function eachFormGroup(label, name, value, type="text", placeholder){
@@ -157,6 +160,23 @@ function EditProfileFormModal(props) {
 						{ eachFormGroup("Re-type new password", "newConfirmPassword", userProfile.newConfirmPassword, "password", "Re-type new password")}
 						{/*{ eachFormGroup("Username", "username", userProfile.username, "password", "Change Username")}*/}
 					</div>
+					
+					<div className="block">
+						<label className="font-medium min-w-150 block text-sm font-400 text-gray-dark-4;" htmlFor="">About You</label>
+						<div className="input-elem ">
+						<textarea
+							name="about_you"
+							onChange={handleChange}
+							defaultValue={userProfile.about_you}
+							placeholder="About Your"
+							className="outline-none w-full"
+						>
+						
+						</textarea>
+						
+						</div>
+					</div>
+					
 					<div className="mt-6">
 						<button type="submit" className="btn">Change Password</button>
 						<button onClick={()=>handleProfileEditForm(false)} type="button" className="btn ml-3">Cancel</button>

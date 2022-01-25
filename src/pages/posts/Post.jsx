@@ -24,7 +24,7 @@ const Post = (props) => {
 
     return (
         <div key={post.id}>
-            <PreloadLink  to={`/posts/${post.slug}`}>
+            <PreloadLink  to={`/posts/${post.slug}/${post.id}`}>
                 <div className="bg-gray-9 bg-opacity-50 flex my-2 rounded">
                     <div style={{width: "100px"}} className="post_cover mr-2">
                         <img className="flex w-full post_img" src={fullLink(post.cover)} alt=""/>

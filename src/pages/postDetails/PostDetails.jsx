@@ -61,7 +61,7 @@ const PostDetails = (props) => {
   const [isOver, setOver] = React.useState(false)
 
   React.useEffect(async () => {
-    let response = await apis.get(`/api/post/${params.slug}`)
+    let response = await apis.get(`/api/posts/${params.id}`)
     if(response.status === 200) {
       let updatedPostDetails = {...postDetails}
       let post = response.data.post
@@ -71,7 +71,7 @@ const PostDetails = (props) => {
       }
       setPostDetails(updatedPostDetails)
     }
-  }, [params.slug])
+  }, [params.id])
 
 
   React.useEffect(async ()=>{
@@ -410,7 +410,9 @@ const PostDetails = (props) => {
               <div className="flex align-center mb-2">
                 <h4 className="title">
                   <PreloadLink
-                    to={`/author/profile/${postDetails.author.username}`}>{postDetails.author.first_name} {postDetails.author.last_name}</PreloadLink>
+                    to={`/author/profile/${postDetails.author.username}/${postDetails.author.id}`}>
+                    {postDetails.author.first_name} {postDetails.author.last_name}
+                  </PreloadLink>
                 </h4>
                 <button className="btn ml-5 btn-outline">Follow</button>
               </div>

@@ -51,7 +51,7 @@ const Navigation = (props) => {
                   </li>
               ) }
               <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-2">
-                <PreloadLink className="block"     to={`/author/profile/${authState.username}`}>
+                <PreloadLink className="block" to={`/author/profile/${authState.username}/${authState.id}`}>
                   <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
                   Profile
                 </PreloadLink>

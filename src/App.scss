@@ -246,3 +246,11 @@ a{
 .font-noto{
   font-family: 'Noto Sans Bengali', 'Roboto', sans-serif;
 }
+.required{
+  &:after{
+    content: "*";
+    color: red;
+    margin-left: 3px;
+    font-weight: 500;
+  }
+}

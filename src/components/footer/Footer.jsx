@@ -63,9 +63,9 @@ const Footer = () => {
                 <div>
                     <h3 className="text-md text-gray-200 mb-2">Authors</h3>
                     <ul>
-                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/rasel_mahmud" >#Rasel Mahmud</PreloadLink> </li>
-                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Raju%20Sarker" >#Raju Sarker</PreloadLink> </li>
-                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Apele%20Mahmud" >#Apele Mahmud</PreloadLink> </li>
+                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/rasel_mahmud/X71lHJqu_" >#Rasel Mahmud</PreloadLink> </li>
+                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Raju%20Sarker/4GsD7MSue" >#Raju Sarker</PreloadLink> </li>
+                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Apele%20Mahmud/y6hXv1owV" >#Apele Mahmud</PreloadLink> </li>
                     </ul>
                 </div>
 
@@ -82,12 +82,12 @@ const Footer = () => {
 
             </div>
             {/*<h4 className="title text-md text-white">Project Start ON {new Date(start).toLocaleString()}</h4>*/}
-            {/* <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded">
+             <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded">
                 <div className="flex items-center justify-center text-gray-900  mt-4 md:mt-0">
-                    <h4 className="px-2 py-1 text-sm font-normal">Total Visitor {appState.visitors.total_visitors && appState.visitors.total_visitors.length > 0 ? appState.visitors.total_visitors.length: 0}  </h4>
-                    <h4 className="px-2 py-1 font-normal text-sm">All Time Hits {appState.visitors.all_time_visit  ? appState.visitors.all_time_visit : 0}  </h4>
+                    <h4 className="px-2 py-1 font-normal text-sm">Today Hits {appState.visitors.day_visitor  ? appState.visitors.day_visitor : 0}  </h4>
+                    <h4 className="px-2 py-1 text-sm font-normal">Total Visitor {appState.visitors.total_visitors ? appState.visitors.total_visitors : 0}  </h4>
                 </div>
-            </div> */}
+            </div>
         </div>
     </div>
   );

@@ -24,7 +24,8 @@ function App(props) {
     return {
         authState: state.authState,
         appState: state.appState,
-        postState: state.postState}
+        postState: state.postState
+    }
   })
 
 
@@ -40,17 +41,17 @@ function App(props) {
 
       
       fetchCurrentAuth(dispatch)
-      // api.post("/api/add-cookie").then(r=>{
-      //    dispatch({
-      //        type: "SET_VISITORS",
-      //        payload: {
-      //            all_time_visit: r.data.day_visitor.ids,
-      //            total_visitors: r.data.total_visitor.ids
-      //        }
-      //    })
-      // }).catch(ex=>{
-      //     console.log(ex.message)
-      // })
+      api.post("/api/add-cookie").then(r=>{
+         dispatch({
+             type: "SET_VISITORS",
+             payload: {
+                 day_visitor: r.data.day_visitor,
+                 total_visitors: r.data.total_visitor
+             }
+         })
+      }).catch(ex=>{
+          console.log(ex.message)
+      })
   }, [])
 
 
@@ -68,9 +69,9 @@ function App(props) {
 
   return (
     <div className="App">
-
+      
         { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
-
+        
           <Navigation
               handleSetExpandDropdown={handleSetExpandDropdown}
               expandDropdown={expandDropdown}

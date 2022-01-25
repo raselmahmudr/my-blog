@@ -1,4 +1,5 @@
 import api from "../../apis";
+// import cache from "/cache/data.json";
 
 export function filterPost(posts, searchValue) {
   let val = searchValue.trim().toLowerCase()
@@ -28,7 +29,7 @@ export function filterPost(posts, searchValue) {
   }
 }
 
-export function fetchPosts(dispatch, cb){
+export  function fetchPosts(dispatch, pathname, cb){
   api.get("/api/posts").then(response=>{
     if(response.status === 200){
       dispatch({
@@ -36,7 +37,19 @@ export function fetchPosts(dispatch, cb){
         payload: response.data.posts
       })
       cb()
+    } else {
+      dispatch({
+        type: "FETCH_POSTS",
+        payload: []
+      })
+      cb()
     }
+  }).catch(ex=>{
+    dispatch({
+      type: "FETCH_POSTS",
+      payload: []
+    })
+    cb()
   })
 }
 
