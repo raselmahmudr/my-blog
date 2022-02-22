@@ -4,6 +4,7 @@
   box-sizing: border-box;
   .selected_input {
     display: flex;
+    flex-wrap: wrap;
     li {
       background: var(--primary);
       padding: 2px 5px;

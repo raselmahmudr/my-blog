@@ -18,7 +18,7 @@ const Footer = () => {
         <div className="container-1200 px-4">
             <div className="footer text-center grid grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-4 md:text-left ">
                 <div>
-                    <h3 className="text-xl text-gray-200 mb-2">My Blog</h3>
+                    <h3 className="text-xl text-gray-200 mb-2">DEV STORY</h3>
                     <a  className='text-gray-300 text-sm mb-2' href="https://rasel-code-dev.vercel.app" target="_blank">
                         Hire Me
                     </a>

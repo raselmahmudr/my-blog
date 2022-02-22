@@ -40,10 +40,10 @@ const ProfileEditor = (props) => {
 		
 		function eachItem(label, name){
 			return (
-				<li className="flex justify-between items-center bg-gray-9 my-2 py-2 pl-2 pr-2 rounded ">
+				<li className="flex justify-between items-center bg-gray-9 my-2 py-2 pl-2 pr-2 rounded dark:bg-dark-700 ">
 					<div className="flex items-center">
-						<label className="font-medium min-w-100 block"  htmlFor="">{label}</label>
-						<span>{ name}</span>
+						<label className="font-medium min-w-100 block dark_subtitle"  htmlFor="">{label}</label>
+						<span className="dark_gray">{ name}</span>
 					</div>
 					<div>
 						{/*<FontAwesomeIcon icon={faPen} />*/}
@@ -56,7 +56,7 @@ const ProfileEditor = (props) => {
 	    return (
 	        <div className="mt-6 mb-2">
 						<div className="flex items-center">
-						<h4 className="font-medium text-gray-900 text-lg mr-4">Profile Information</h4>
+						<h4 className="font-medium text-gray-900 text-lg mr-4 dark_subtitle">Profile Information</h4>
 							<FontAwesomeIcon  className="cursor-pointer" onClick={handleProfileEditForm} icon={faPen} />
 						</div>
 						

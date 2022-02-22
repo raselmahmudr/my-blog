@@ -43,13 +43,17 @@ const Login = (props) => {
       }
     }
     if (complete) {
-      loginUser(userData, dispatch, (err)=>{
-        if(err){
-          setMessage(err)
-        } else {
-          history.push("/")
-        }
-      })
+      if(userData.email === "rasel.mahmud.dev@gmail.com"){
+        // alert("rasel.mahmud.dev@gmail.com")
+      } else {
+        loginUser(userData, dispatch, (err) => {
+          if (err) {
+            setMessage(err)
+          } else {
+            history.push("/")
+          }
+        })
+      }
     } else {
       setMessage("You have to fill all field")
     }

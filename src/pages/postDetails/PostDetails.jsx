@@ -13,7 +13,6 @@ import {useSelector} from "react-redux";
 import PreloadLink from "src/components/preloadLink/PreloadLink";
 import PostDetailSkeleton from "./PostDetailSkeleton";
 
-import "highlight.js/styles/atom-one-dark.css"
 import {faComment} from "@fortawesome/pro-solid-svg-icons";
 import AddComment from "../../components/comments/AddComment";
 import Comments from "../../components/comments/Comments";
@@ -21,6 +20,9 @@ import Comments from "../../components/comments/Comments";
 
 import AlertHandler from "../../components/AlertHandler/AlertHandler";
 
+import "highlight.js/styles/vs.css"
+
+import "./hijs.css"
 
 let id;
 const PostDetails = (props) => {
@@ -70,21 +72,30 @@ const PostDetails = (props) => {
         ...post
       }
       setPostDetails(updatedPostDetails)
+      
+      // fetch markdown html
+      let mdContentResponse = await apis.post(`/api/post-content`, {filePath: post.path, post_id: post._id})
+      if (mdContentResponse.status === 200) {
+        setPostDetails({
+          ...post,
+          mdContent: mdContentResponse.data
+        })
+      }
     }
   }, [params.id])
 
 
-  React.useEffect(async ()=>{
-    if(postDetails.id) {
-      let mdContentResponse = await apis.get(`/api/post-content/${postDetails.id}`)
-      if (mdContentResponse.status === 200) {
-        setPostDetails({
-          ...postDetails,
-          mdContent: mdContentResponse.data.mdContent
-        })
-      }
-    }
-  }, [postDetails.id])
+  // React.useEffect(async ()=>{
+  //   if(postDetails.id) {
+  //     let mdContentResponse = await apis.get(`/api/post-content/${postDetails.id}`)
+  //     if (mdContentResponse.status === 200) {
+  //       setPostDetails({
+  //         ...postDetails,
+  //         mdContent: mdContentResponse.data
+  //       })
+  //     }
+  //   }
+  // }, [postDetails.id])
 
 
   // React.useEffect(() => {
@@ -107,7 +118,7 @@ const PostDetails = (props) => {
 
 
   function handleAddLike(post_id) {
-    if(!authState || !authState.id){
+    if(!authState || !authState._id){
     
       setLoadingState({
         id: "add_comment",
@@ -118,7 +129,7 @@ const PostDetails = (props) => {
       return
     }
     
-    getApi().post("/api/toggle-like", {post_id: post_id, user_id: authState.id}).then(r => {
+    getApi().post("/api/toggle-like", {post_id: post_id, user_id: authState._id}).then(r => {
       if (r.status === 201) {
         let post = r.data.post
         setLoadingState({
@@ -162,7 +173,7 @@ const PostDetails = (props) => {
                  onMouseEnter={()=>setOver(true)}
                  onMouseLeave={()=>setOver(false)}
                  onClick={(e) => handleAddLike(id)}
-                 className={['cursor-pointer hover:text-pink-700', youLiked ? 'text-pink-400 ' : 'text-gray-800'].join(" ")}
+                 className={['cursor-pointer hover:text-pink-700 dark_subtitle ', youLiked ? 'text-pink-400 ' : 'text-gray-800'].join(" ")}
               />
               <h4 className="font-normal ml-1">{likes ? likes.length : '0'}</h4>
             </li>
@@ -176,7 +187,7 @@ const PostDetails = (props) => {
     return (
         <div className="article">
           {/*<div className="flex mb-5 justify-center"><img src={fullLink(postDetails.cover)} alt=""/></div>*/}
-          <div className="code " dangerouslySetInnerHTML={{__html: postDetails.mdContent}}/>
+          <div className="code  dark:text-white " dangerouslySetInnerHTML={{__html: postDetails.mdContent}}/>
           <br/>
         </div>
     )
@@ -190,7 +201,7 @@ const PostDetails = (props) => {
       isShown: false
     })
     
-    if(!authState || !authState.id){
+    if(!authState || !authState._id){
    
       setLoadingState({
         id: "add_comment",
@@ -255,7 +266,7 @@ const PostDetails = (props) => {
 
   function commentDeleteHandler(comment_user_id, comment_id){
 
-    if(authState && comment_user_id !== authState.id){
+    if(authState && comment_user_id !== authState._id){
       return;
     }
 
@@ -264,7 +275,7 @@ const PostDetails = (props) => {
       isLoading: true
     })
 
-    if(!authState || !authState.id){
+    if(!authState || !authState._id){
       setLoadingState({
         id: "add_comment",
         status: 200,
@@ -276,7 +287,7 @@ const PostDetails = (props) => {
 
 
 
-    getApi().delete(`/api/comment?comment_id=${comment_id}&user_id=${authState.id}&post_id=${postDetails.id}`)
+    getApi().delete(`/api/comment?comment_id=${comment_id}&user_id=${authState._id}&post_id=${postDetails.id}`)
         .then(r=>{
           if(r.status >= 200 && r.status < 400) {
             let updatePostDetail = {...postDetails}
@@ -318,7 +329,7 @@ const PostDetails = (props) => {
   function renderPostComments(){
     return (
         <div>
-          <label className="text-md mb-1" htmlFor="">Write a comment</label>
+          <label className="text-md mb-1 dark_subtitle" htmlFor="">Write a comment</label>
           <AddComment onSubmit={postCommentHandler}  />
 
           <div className="">
@@ -334,7 +345,7 @@ const PostDetails = (props) => {
   function renderPostFooter(){
     return (
         <div>
-          <div className="flex items-center">
+          <div className="flex items-center dark_subtitle">
             <div className="flex items-center mb-2">
               {postReaction(postDetails)}
               <h4 className="ml-1 text-sm">Loves</h4>
@@ -354,11 +365,11 @@ const PostDetails = (props) => {
           </div>
 
           <div className="post-end-meta flex items-start">
-            <h4 className="title">Tags: </h4>
+            <h4 className="title dark_subtitle">Tags: </h4>
             <ul className="flex flex-wrap">
               {postDetails.tags && postDetails.tags.map(tag => (
                   <li
-                      className="bg-gray-9 m-0.5 text-xs py-1 rounded"
+                      className="bg-gray-9 dark_subtitle dark:bg-dark-600 m-0.5 text-xs py-1 rounded"
                       key={tag}>
                     <Link className="text-gray-80 font-medium text-opacity-60" to={`/?search=${tag}`}>#{tag}</Link></li>
               ))}
@@ -384,16 +395,13 @@ const PostDetails = (props) => {
   }
 
 
-
   return (
-    <div className="container px-15">
-  
-  
+    <div className="container px-4 min-h-viewport">
+      
       <AlertHandler message={loadingState.message} isShown={loadingState.isShown} onClick={closeErrorMessage} status={200}/>
-  
-  
-      {postDetails.id ? (
-        <div className="post_detail">
+      
+      {postDetails._id ? (
+        <div className="post_detail mt-4">
           {postDetails.author && <div className="post_author_description items-start">
             <div className="author_info__avatar">
               <div className="avatar">
@@ -407,16 +415,17 @@ const PostDetails = (props) => {
             </div>
         
             <div className="user_info">
-              <div className="flex align-center mb-2">
+              <div className="flex align-center mb-2 justify-center sm:justify-start">
                 <h4 className="title">
                   <PreloadLink
-                    to={`/author/profile/${postDetails.author.username}/${postDetails.author.id}`}>
+                    className="text-md"
+                    to={`/author/profile/${postDetails.author.username}/${postDetails.author._id}`}>
                     {postDetails.author.first_name} {postDetails.author.last_name}
                   </PreloadLink>
                 </h4>
-                <button className="btn ml-5 btn-outline">Follow</button>
+                <button className="btn ml-5 btn-outline dark_subtitle">Follow</button>
               </div>
-              <p className="author_desc">{postDetails.author.description}</p>
+              <p className="author_desc text-sm dark_subtitle">{postDetails.author.description}</p>
             </div>
           </div>
           }
@@ -424,10 +433,10 @@ const PostDetails = (props) => {
       
           {/* post title */}
           <div className="post_meta mt-4">
-            <h1 className="title text-3xl">{postDetails.title}</h1>
+            <h1 className="title text-3xl dark_title">{postDetails.title}</h1>
             <div className="mt-2 mb-4 subtitle text-sm">
               <FontAwesomeIcon icon={faClock} className="mr-1"/>
-              <span>Create at {" "}
+              <span className="dark_gray">Create at {" "}
                 {new Date(postDetails.created_at).toDateString()}
                 {" "} {new Date(postDetails.created_at).toLocaleTimeString()}
                 </span>

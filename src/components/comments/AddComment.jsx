@@ -18,7 +18,7 @@ const AddComment = props =>{
         <div className="add-comment-form">
           <textarea
             onChange={(e)=>setNewComment({...newComment, text: e.target.value})}
-            className="input-elem"
+            className="input-elem dark_subtitle dark:bg-dark-600"
             name="text"
             value={newComment.text}
             placeholder="Post your comment"

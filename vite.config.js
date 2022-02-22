@@ -2,35 +2,68 @@ const { defineConfig } = require('vite')
 const reactRefresh = require('@vitejs/plugin-react-refresh')
 const path = require("path")
 
+const { VitePWA } = require('vite-plugin-pwa')
+
+
 // markdown file to js convert
-function myPlugin(){
-  const fileMatch = /\.(md)/
-  return {
-    name: "my-md-file",
-    transform(src, id){
-      if(fileMatch.test(id)){
-        return {
-          code: `
-            export default { text: ${JSON.stringify(src)}}
-          `,
-          map: null
-        }
-      }
-    }
-  }
-}
+// function myPlugin(){
+//   const fileMatch = /\.(md)/
+//   return {
+//     name: "my-md-file",
+//     transform(src, id){
+//       if(fileMatch.test(id)){
+//         return {
+//           code: `
+//             export default { text: ${JSON.stringify(src)}}
+//           `,
+//           map: null
+//         }
+//       }
+//     }
+//   }
+// }
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     reactRefresh(),
-    myPlugin()
+    VitePWA({
+      workbox: {
+        cleanupOutdatedCaches: false
+      },
+      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      manifest: {
+        name: 'Name of your app',
+        short_name: 'Short name of your app',
+        description: 'Description of your app',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          }
+        ]
+      }
+    })
+    // myPlugin()
   ],
   server: {
     port: 5500,
     // host: "0.0.0.0"
   },
-  base: "/my-blog/",
+  // base: "/my-blog/",
   build: {
     // outDir: "build"
   },

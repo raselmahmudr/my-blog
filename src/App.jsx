@@ -11,7 +11,7 @@ import {Route, Switch} from "react-router-dom";
 
 import {fetchCurrentAuth} from "store/actions/authAction"
 import Footer from "./components/footer/Footer";
-import api from "./apis";
+import api, {getApi} from "./apis";
 import Backdrop from "./components/UI/Backdrop/Backdrop";
 
 
@@ -32,14 +32,38 @@ function App(props) {
     // here should use memo to render Navigation...
     const [expandDropdown, setExpandDropdown] = useState("")
 
+  function makePost(){
+    getApi().post("/api/posts", {name: "ALex"}).then(r=>{
+      console.log(r)
+    }).catch(ex=>{
+      console.log(ex)
+    })
+  }
   
   React.useEffect(() => {
+    // getApi().get("/api/test").then(r=>{
+    //   console.log(r)
+    // }).catch(ex=>{
+    //   console.log(ex)
+    // })
+    //
+    // getApi().get("/api/posts").then(r=>{
+    //   console.log(r)
+    // }).catch(ex=>{
+    //   console.log(ex)
+    // })
+    let html = window.document.children[0]
+    let theme = window.localStorage.getItem("theme")
+    if(theme){
+      html.classList.add(theme)
+    }
+    
       const loader = document.querySelector(".loader")
       if(loader) {
           loader.parentElement.removeChild(loader)
       }
 
-      
+
       fetchCurrentAuth(dispatch)
       api.post("/api/add-cookie").then(r=>{
          dispatch({
@@ -68,8 +92,8 @@ function App(props) {
     }
 
   return (
-    <div className="App">
-      
+    <div className="App bg-white dark:bg-dark-800 ">
+      {/*<button onClick={makePost}>Make Post</button>*/}
         { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
         
           <Navigation

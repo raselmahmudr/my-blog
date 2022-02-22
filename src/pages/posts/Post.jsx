@@ -23,7 +23,7 @@ const Post = (props) => {
 
 
     return (
-        <div key={post.id}>
+        <div>
             <PreloadLink  to={`/posts/${post.slug}/${post.id}`}>
                 <div className="bg-gray-9 bg-opacity-50 flex my-2 rounded">
                     <div style={{width: "100px"}} className="post_cover mr-2">

@@ -14,7 +14,7 @@ import 'react-markdown-editor-lite/lib/index.css';
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css"
 import blobToBase64 from "../../utils/blobToBase64";
-import base64ToBlob from "../../utils/base64ToBlob";
+// import base64ToBlob from "../../utils/base64ToBlob";
 import Loader from "../../components/UI/Loader";
 import {CSSTransition} from "react-transition-group";
 
@@ -42,7 +42,7 @@ const AddPost = (props) => {
     title: "",
     tags: [],
     cover: "",
-    cover_url: "",
+    summary: "",
     isUpdated: false,
     mdContent: ""
   })
@@ -51,6 +51,7 @@ const AddPost = (props) => {
 
   const params = useParams()
 
+  
   let m  = new MarkdownIt( {
     html: true,
     linkify: true,
@@ -65,21 +66,24 @@ const AddPost = (props) => {
     }
   })
 
-
   React.useEffect(()=>{
-    if(params.postId !== "null"){
-      fetchPostById(params.postId, dispatch, (returnPost)=>{
+    if(params.id !== "null"){
+      fetchPostById(params.id, dispatch, (returnPost)=>{
+        
         setPost({
           ...post,
           ...returnPost,
           isUpdated: true
         })
-      })
-      fetchRawMdContent(params.postId, dispatch, (content)=>{
-        setMarkdown_string(content)
+        
+        // fetch markdown files
+        fetchRawMdContent(returnPost.path, dispatch, (content)=>{
+          setMarkdown_string(content)
+        })
+        
       })
     }
-  }, [params.postId])
+  }, [params.id])
 
 
   function handleChange(e){
@@ -102,17 +106,18 @@ const AddPost = (props) => {
 
   async function addPostHandler(e){
     e.preventDefault()
-    const { isUpdated, id, title, tags, cover_url } = post
+    const { isUpdated, _id, title, tags, cover_url } = post
 
-    if(title && tags.length > 0 && markdown_string){
+    if(title && title.trim() && tags.length > 0 && markdown_string){
 
       if(isUpdated) {
 
         getApi().post("/api/post/update-post", {
-          id,
+          _id,
           title,
           tags,
-          cover: cover_url ? cover_url.toString() : post.cover,
+          summary: post.summary,
+          cover: post.cover ? post.cover : "",
           mdContent: markdown_string
         }).then(response => {
           if(response.status < 400 && response.status >= 200) {
@@ -122,6 +127,10 @@ const AddPost = (props) => {
               status: 200,
               isLoading: false,
             })
+            setTimeout(()=>{
+              let path = `/author/profile/${authState.username}/${authState.id}`
+              history.push(path)
+            }, 500)
           } else {
             setLoadingState({
               id: "addpost",
@@ -140,25 +149,33 @@ const AddPost = (props) => {
         })
       } else {
 
-        let formData = new FormData()
-        formData.append("title", title)
-        formData.append("tags", JSON.stringify(tags))
-        if(post.cover){
-          formData.append("cover", post.cover)
+        let d = {
+          title: title.trim(),
+          tags,
+          summary: post.summary,
+          mdContent: markdown_string,
+          author_id: authState._id,
+          cover: post.cover ? post.cover : ""
         }
-        formData.append("mdContent", markdown_string)
-        formData.append("author_id", authState.id)
+      
+        // formData.append("title", title)
+        // formData.append("tags", JSON.stringify(tags))
+        // if(post.cover){
+        //   formData.append("cover", post.cover)
+        // }
+        // formData.append("mdContent", markdown_string)
+        // formData.append("author_id", authState.id)
+        //
+        // if(cover.blob){
+        //   let r = await base64ToBlob(cover.base)
+        //   formData.append("upload-cover", r, cover.name)
+        // } else {
+        //   if(cover_url){
+        //     formData.append("cover", cover_url.toString())
+        //   }
+        // }
 
-        if(cover.blob){
-          let r = await base64ToBlob(cover.base)
-          formData.append("upload-cover", r, cover.name)
-        } else {
-          if(cover_url){
-            formData.append("cover", cover_url.toString())
-          }
-        }
-
-        getApi().post("/api/post/add-post", formData)
+        getApi().post("/api/post/add-post", d)
         .then(response=>{
           if(response.status < 400 && response.status >= 200){
             setLoadingState({
@@ -167,6 +184,10 @@ const AddPost = (props) => {
               status: 200,
               isLoading: false,
             })
+            setTimeout(()=>{
+              let path = `/author/profile/${authState.username}/${authState._id}`
+              history.push(path)
+            }, 500)
           } else{
             setLoadingState({
               id: "addpost",
@@ -176,9 +197,10 @@ const AddPost = (props) => {
             })
           }
         }).catch(ex=>{
+          console.log(ex)
           setLoadingState({
             id: "addpost",
-            message: "Post Upload Fail",
+            message: ex.message,
             status: 400,
             isLoading: false,
           })
@@ -251,20 +273,22 @@ const AddPost = (props) => {
 
   function inputWrapper() {
     return (
-        <div className="input_wrapper input-elem flex justify-between">
-          <input name="cover_url" onChange={handleChange} value={post.cover} className="outline-none w-full" type="text" placeholder="Paster image full url" />
+        <div className="input_wrapper input-elem dark:bg-dark-600 dark_subtitle flex justify-between">
+          <input name="cover " onChange={handleChange} value={post.cover}
+             className="outline-none w-full bg-transparent "
+             type="text" placeholder="Paster image full url" />
           <button onClick={()=>coverPhotoInputRef.current && coverPhotoInputRef.current.click()} className="cursor-pointer">Upload</button>
         </div>
     )
   }
   
   return (
-    <div className="container px-2 mt-2 ">
+    <div className="container px-2 mt-4">
       <div>
-        <button onClick={()=> history.goBack() } className="btn">Back to Profile</button>
+        <button onClick={()=> history.goBack() } className="btn dark:bg-dark-600 dark_subtitle">Back to Profile</button>
       </div>
-      <h1 className="title text-lg text-center font-bold">{post.isUpdated ? "Update Post" : "Add New Post"}</h1>
-
+      <h1 className="title text-lg text-center font-bold dark_title">{post.isUpdated ? "Update Post" : "Add New Post"}</h1>
+      
 
       {loadingState.id === "addpost" &&
         <CSSTransition unmountOnExit={true} in={loadingState.message} timeout={450} classNames="my-node">
@@ -279,17 +303,17 @@ const AddPost = (props) => {
         <form onSubmit={addPostHandler} className="add-post-form">
           
           <div className="form-group flex-col">
-            <label className="block no-wrap text-sm" htmlFor="">Post Title</label>
+            <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Post Title</label>
             <input
               onChange={handleChange}
               type="text"
               name="title"
               value={post.title}
-              className="input-elem" />
+              className="input-elem dark:bg-dark-600 dark_subtitle" />
           </div>
           
           <div className="form-group flex-col">
-            <label className="block no-wrap text-sm" htmlFor="">Post cover photo</label>
+            <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Post cover photo</label>
             {inputWrapper()}
             <input
               type="file" ref={coverPhotoInputRef} hidden={true} accept="image/*" onChange={handleChangeCoverPhoto} />
@@ -307,26 +331,26 @@ const AddPost = (props) => {
           </div>
           
           <div className="form-group flex-col">
-            <label className="block no-wrap text-sm" htmlFor="">Tags</label>
-            <MultiInput  name="tags" onChange={handleChange} defaultValues={post.tags} />
+            <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Tags</label>
+            <MultiInput name="tags" onChange={handleChange} defaultValues={post.tags} />
           </div>
 
           <div>
              <div>
                <button type="button" onClick={()=>imageInputRef.current && imageInputRef.current.click()}
-                 className="btn btn-info mb-2">Upload a Image for Markdown CDN link </button>
+                 className="btn btn-info mb-2 ">Upload a Image for Markdown CDN link </button>
                <input onChange={handleUploadMarkdownImage} type="file" accept="image/*" hidden={true} ref={imageInputRef}/>
                { loadingState.id === "photo_upload" && loadingState.isLoading && (
                    <div className="flex flex-col  items-center">
                      <Loader/>
-                     <h5>Uploading...</h5>
+                     <h5 className="dark_subtitle">Uploading...</h5>
                    </div>
                ) }
 
                {loadingState.id === "photo_upload" &&
                  <CSSTransition unmountOnExit={true} in={loadingState.message} timeout={450} classNames="my-node">
                    <div className={loadingState.status === 400 ? "error-alert" : "success-alert"}>
-                     <h4>{loadingState.message}</h4>
+                     <h4 className="dark_subtitle">{loadingState.message}</h4>
                    </div>
                  </CSSTransition>
                }
@@ -340,22 +364,31 @@ const AddPost = (props) => {
                  { image && <img className="responsive-image" src={image} alt=""/> }
                </div>
              </div>
-
             <div className="form-group flex-col">
-              <label className="block no-wrap text-sm" htmlFor="">Article</label>
+              <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Summary</label>
+              <textarea
+                onChange={handleChange}
+                name="summary"
+                rows={8}
+                defaultValue={post.summary}
+                className="input-elem dark:bg-dark-600 dark_subtitle"  />
+            </div>
+            <div className="form-group flex-col">
+              <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Article</label>
 
               <MdEditor
                   value={markdown_string}
                   style={{ height: "500px" }}
                   renderHTML={(text) => m.render(text)}
                   onChange={handleEditorChange}
+                  className=""
               />
               {/*<textarea style={{ minHeight: post.isUpdated ? "500px": "200px" }} className="input-elem ml-5" defaultValue={post.mdContent}></textarea>*/}
             </div>
 
           </div>
           
-          <button  className="btn btn-primary">{post.isUpdated ? "Update" : "Add Post"}</button>
+          <button  className="btn btn-primary dark:bg-dark-600 dark_subtitle">{post.isUpdated ? "Update" : "Add Post"}</button>
 
         </form>
         

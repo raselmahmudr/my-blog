@@ -11,7 +11,7 @@ const DatabaseFiles = () => {
 
     const [state, setState] = React.useState({
         markdownFiles: [],
-        databaseFiles: []
+        posts: []
     })
 
     const contentRef = React.useRef()
@@ -29,11 +29,31 @@ const DatabaseFiles = () => {
         getApi().get("/api/files").then(res=>{
             if(res.status >= 200 && res.status <= 400){
                 setState({
-                    markdownFiles: res.data.markdownFiles,
-                    databaseFiles: res.data.databaseFiles
+                    markdownFiles: res.data
+                })
+                getApi().get("/api/posts").then(response=>{
+                    if(response.status === 200){
+                        // console.log(response.data.posts)
+                        let mdFiles = res.data;
+                        let updatedFiles = []
+                        mdFiles.forEach(mdFile=>{
+                            let index = response.data.posts.findIndex(p=>p.path === mdFile.path )
+                            updatedFiles.push({
+                                ...mdFile,
+                                orphan: index === -1
+                            })
+                        })
+                        setState({
+                            ...state,
+                            markdownFiles: updatedFiles
+                        })
+                    }
+                }).catch(ex=>{
+                    console.log(ex.message)
                 })
             }
-        })
+        }).catch(ex=>{})
+        
 
     }, [])
 
@@ -99,14 +119,15 @@ const DatabaseFiles = () => {
                     <th>Name</th>
                     <th>Modify At</th>
                     <th>Size</th>
+                    <th>Orphan</th>
                     <th>Path</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                { data && data.map(md=>(
+                { data && data.map((md, i)=>(
 
-                    <tr>
+                    <tr key={i}>
                         <td className="text-blue-700 my-1 cursor-pointer">
                             <div className="flex items-center">
                                 <FontAwesomeIcon onClick={()=>clickOnFile(md)}  icon={faPen} />
@@ -125,6 +146,9 @@ const DatabaseFiles = () => {
                         </td>
                         <td className="text-blue-700 my-1 px-4">
                             <span className="text-sm text-blue-700 my-2 cursor-pointer">{md.size}</span>
+                        </td>
+                        <td className="text-blue-700 my-1 px-4">
+                            <span className="text-sm text-blue-700 my-2 cursor-pointer">{md.orphan ? "Yes" : "NO"}</span>
                         </td>
                         <td className="text-blue-700 my-1">
                             <span className="text-sm text-blue-700 my-2 cursor-pointer">{md.path}</span>
@@ -160,11 +184,18 @@ const DatabaseFiles = () => {
 
     function handleDeleteFile(file) {
         if(file.dir === true){
-            return alert("You can delete a Directory.")
+            return alert("You can't delete a Directory.")
         }
-        getApi().delete(`/api/file-delete?path=${file.path}`).then(res=>{
+        // getApi().delete(`/api/file-delete?path=${file.path}`).then(res=>{
+        
+        getApi().post(`/api/file-delete`, {path: file.path}).then(res=>{
             if(res.status === 201){
-                alert(res.data.message)
+                let updatedState = [...state.markdownFiles]
+                let o = updatedState.filter(md=>md.path !== file.path)
+                setState({
+                    ...state,
+                    markdownFiles: o
+                })
             } else {
                 alert("file delete fail")
             }
@@ -196,17 +227,6 @@ const DatabaseFiles = () => {
                     </div>
                     <div className="overflow-x-auto">
                         {renderTable(state.markdownFiles)}
-                    </div>
-                </div>
-                <div className="mt-4">
-                    <div className="flex mb-1 items-center">
-                        <h4>Database Files</h4>
-                        <button
-                            onClick={()=>databaseFileChooser.current && databaseFileChooser.current.click()}
-                            className="ml-5">Upload a Database File</button>
-                    </div>
-                    <div className="overflow-x-auto">
-                        {renderTable(state.databaseFiles)}
                     </div>
                 </div>
             </div>

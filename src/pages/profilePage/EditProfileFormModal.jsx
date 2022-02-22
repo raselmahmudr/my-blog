@@ -178,7 +178,7 @@ function EditProfileFormModal(props) {
 					</div>
 					
 					<div className="mt-6">
-						<button type="submit" className="btn">Change Password</button>
+						<button type="submit" className="btn">Update</button>
 						<button onClick={()=>handleProfileEditForm(false)} type="button" className="btn ml-3">Cancel</button>
 					</div>
 				</form>

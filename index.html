@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="" >
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/src/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/src/manifest.json">
     <title>My Blog</title>
     <style>
       body{
@@ -90,5 +91,13 @@
     </div>
 
     <script type="module" src="/src/main.jsx"></script>
+    <script type="text/javascript">
+      if ('serviceWorker' in navigator) {
+        (async () => {
+          await navigator.serviceWorker.register("src/web-worker/service-worker.js", { type: 'module' })
+          console.log("Service worker registered")
+        })()
+      }
+    </script>
   </body>
 </html>

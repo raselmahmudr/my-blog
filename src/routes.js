@@ -1,5 +1,8 @@
 import { lazy } from "react";
 import ReactLazyPreload from "./utils/ReactLazyPreload";
+import AllSignIn from "./pages/auth/AllSignIn";
+import SignUp from "./pages/auth/SignUp";
+import AddPost from "./pages/admin/AddPost";
 
 const HomePage = ReactLazyPreload(()=>import("./pages/homePage/Homepage"));
 const About = ReactLazyPreload(()=>import("./components/about/About"));
@@ -27,18 +30,21 @@ export default (isAuth)=>{
     return [
       ...publicRoutes,
       { path: "/admin/dashboard", component: Dashboard},
-      // { path: "/admin/add-post", component:  AddPost},
+      { path: "/admin/dashboard/add-post/:id",  component:  AddPost},
+      // {path: "/admin/dashboard/add-post/:null",  component: AddPost},
       {path: "/auth/login", component: HomePage},
       {path: "/auth/registration", component: HomePage},
     ]
   } else {
     return  [
       ...publicRoutes,
+      // { path: "/admin/dashboard/add-post/:id",  component:  AddPost},
       {path: "/auth/login",  component: Login},
-
-      {path: "/auth/registration", component: Registration},
-      {path: "/admin/dashboard/add-post/null",  component: Login},
-      {path: "/admin/dashboard",  component: Login},
+      {path: "/auth/join",  component: AllSignIn},
+      { path: "/admin/dashboard/add-post/:id",  component:  AddPost},
+      // {path: "/admin/dashboard/add-post/null",  component: AddPost},
+      // {path: "/auth/join/new", component: SignUp},
+      // {path: "/admin/dashboard",  component: Login},
 
     ]
   }

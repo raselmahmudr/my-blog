@@ -100,7 +100,7 @@ const Posts = (props) => {
               postState.searchResultPosts.length <= 0 ? (
               <h4 className="title text-sm"> {!isLoading && `not posts matched with ${postState.searchValue}` }</h4>
               ) : postState.searchResultPosts.map(post => (
-                  <Post post={post} authId={authState.id} />
+                  <Post post={post} authId={authState.id} key={post.id} />
               ))
             }
 

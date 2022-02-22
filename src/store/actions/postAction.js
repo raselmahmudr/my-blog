@@ -1,5 +1,4 @@
 import api from "../../apis";
-// import cache from "/cache/data.json";
 
 export function filterPost(posts, searchValue) {
   let val = searchValue.trim().toLowerCase()
@@ -49,7 +48,7 @@ export  function fetchPosts(dispatch, pathname, cb){
       type: "FETCH_POSTS",
       payload: []
     })
-    cb()
+    cb && cb()
   })
 }
 
@@ -77,20 +76,41 @@ export function fetchPostMdContent(postId, dispatch, cb){
   })
 }
 
-export function fetchRawMdContent(postId, dispatch, cb){
-  api.get(`/api/raw-md-content/${postId}`).then(response=>{
+export function fetchRawMdContent(path, dispatch, cb){
+  
+  api.post(`/api/raw-md-content`, { path }).then(response=>{
     if(response.status === 200){
       dispatch({
         type: "FETCH_RAW_MD_CONTENT",
         payload: response.data.mdContent
       })
       cb(response.data.mdContent)
+    } else {
+      cb("")
     }
+  }).catch(ex=>{
+    cb("")
   })
+  
+  
+  // api.get(`/api/raw-md-content/${postId}`).then(response=>{
+  //   if(response.status === 200){
+  //     dispatch({
+  //       type: "FETCH_RAW_MD_CONTENT",
+  //       payload: response.data.mdContent
+  //     })
+  //     cb(response.data.mdContent)
+  //   } else {
+  //     cb("")
+  //   }
+  // }).catch(ex=>{
+  //   cb("")
+  // })
+  
 }
 
-export const deletePost = (postId, cb) => async (dispatch) => {
-  let response = await api.delete(`/api/post/${postId}`)
+export const deletePost = (postId, path, cb) => async (dispatch) => {
+  let response = await api.post(`/api/posts/delete`, { _id: postId, path })
   if (response.status === 200) {
     dispatch({
       type: "DELETE_POST",
