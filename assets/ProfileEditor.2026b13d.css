@@ -1,0 +1,1 @@
+:root{--primary: #6f72d8;--white: #fff;--gray-1: #e7e7e7;--gray-10: #383838}.profile-edit-form{top:10%;left:50%;transform:translate(-50%);width:90%;max-width:900px}@media (max-width: 767px){.profile-edit-form{min-width:90%}}.profile-edit-form .rounded-5{border-radius:4px}
