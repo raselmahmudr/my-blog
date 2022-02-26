@@ -1,4 +1,6 @@
-import api from "../../apis";
+import api, {getApi} from "../../apis";
+
+
 
 export function filterPost(posts, searchValue) {
   let val = searchValue.trim().toLowerCase()
@@ -28,12 +30,48 @@ export function filterPost(posts, searchValue) {
   }
 }
 
+export function filterPostUsingTag(dispatch, tag) {
+  api.post("/api/filter-posts", {
+    filter: {
+      tags: tag
+    }
+  }).then(doc=>{
+    dispatch({
+      type: "SEARCH_POSTS",
+      payload: doc.data
+    })
+
+  })
+    .catch(ex=>{
+      console.log(ex)
+    })
+}
+
+
+export function fetchTopPosts(dispatch, pathname, cb){
+  return new Promise(async (resolve, reject)=>{
+    try {
+      let response = await getApi().get("/api/posts/hits")
+      if (response.status === 200) {
+        // setTopPosts(res.data.posts)
+        dispatch({
+          type: "FETCH_TOP_POSTS",
+          payload: response.data.posts
+        })
+      }
+    
+    } catch (ex){
+    
+    }
+  })
+}
+
 export  function fetchPosts(dispatch, pathname, cb){
   api.get("/api/posts").then(response=>{
     if(response.status === 200){
       dispatch({
         type: "FETCH_POSTS",
-        payload: response.data.posts
+        payload: response.data
       })
       cb()
     } else {

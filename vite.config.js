@@ -2,7 +2,7 @@ const { defineConfig } = require('vite')
 const reactRefresh = require('@vitejs/plugin-react-refresh')
 const path = require("path")
 
-const { VitePWA } = require('vite-plugin-pwa')
+// const { VitePWA } = require('vite-plugin-pwa')
 
 
 // markdown file to js convert
@@ -27,36 +27,36 @@ const { VitePWA } = require('vite-plugin-pwa')
 export default defineConfig({
   plugins: [
     reactRefresh(),
-    VitePWA({
-      workbox: {
-        cleanupOutdatedCaches: false
-      },
-      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-      manifest: {
-        name: 'Name of your app',
-        short_name: 'Short name of your app',
-        description: 'Description of your app',
-        theme_color: '#ffffff',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable',
-          }
-        ]
-      }
-    })
+    // VitePWA({
+    //   workbox: {
+    //     cleanupOutdatedCaches: false
+    //   },
+    //   includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+    //   manifest: {
+    //     name: 'Name of your app',
+    //     short_name: 'Short name of your app',
+    //     description: 'Description of your app',
+    //     theme_color: '#ffffff',
+    //     icons: [
+    //       {
+    //         src: 'pwa-192x192.png',
+    //         sizes: '192x192',
+    //         type: 'image/png',
+    //       },
+    //       {
+    //         src: 'pwa-512x512.png',
+    //         sizes: '512x512',
+    //         type: 'image/png',
+    //       },
+    //       {
+    //         src: 'pwa-512x512.png',
+    //         sizes: '512x512',
+    //         type: 'image/png',
+    //         purpose: 'any maskable',
+    //       }
+    //     ]
+    //   }
+    // })
     // myPlugin()
   ],
   server: {

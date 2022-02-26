@@ -2,7 +2,7 @@ const initialState = {
   username: "",
   email: "",
   first_name: "",
-  id: ""
+  _id: ""
 }
 
 

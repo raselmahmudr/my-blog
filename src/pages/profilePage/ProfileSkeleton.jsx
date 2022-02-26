@@ -1,6 +1,6 @@
 import React from 'react';
 import Skelecton from "../../components/UI/skeleton/Skeleton";
-import PostSkeleton from "../posts/PostSkeleton";
+import PostSkeleton from "../postFilterPage/PostSkeleton";
 
 
 const ProfileSkeleton = () => {

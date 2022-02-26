@@ -1,10 +1,13 @@
 import React from 'react'
 import { matchPath, Link, withRouter } from 'react-router-dom'
 
-import routes from 'src/routes'
-import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
 
+import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
 import "./Preload.scss"
+
+
+import { publicRoutes } from "../../Routes";
+import {adminRoutes} from "../../pages/admin/AdminRoutes";
 
 const findComponentForRoute = (path, routes) => {
   const matchingRoute = routes.find(route =>
@@ -80,10 +83,17 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
     // isLoaded(false)
     // preloadLinks.push(path)
 
-    const component = findComponentForRoute(path, routes(true, "no"));
+    let routes = [
+      ...adminRoutes,
+        ...publicRoutes,
+      
+    ]
+ 
+    
+    const component = findComponentForRoute(path, routes);
 
     if (component && component.preload) {
-      
+
       const moduleLoadedPromise = component.preload()
       /**
         * check it preload function exist or not when import module with loadable component or react lazy
@@ -110,17 +120,17 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
             history.push(path)
             preloadLinks = []
           }
-    
+
         }).catch(err=>console.log("Something were wrong when preload component load", err))
-        
-        
+
+
       } else{
         /**
          * Component.preload function not return promises So return normal Route without preload component
          */
         normalRouteLoad()
       }
-      
+
     } else {
       normalRouteLoad()
     }
@@ -144,12 +154,13 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
   return (
     <div className="preload_route_link" >
        { isLoading && <ProgressBar  /> }
-        <Link 
-          className={isActive ? "active" : ""}
+        <Link
+        
+          className={"pointer-= " + isActive ? "active" : ""}
+          // onClick={}
           onMouseDown={()=> preloadRouteComponent(to) }
           {...rest}
         />
-        
     </div>
   )
 }

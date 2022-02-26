@@ -1,24 +1,21 @@
 import React, {useEffect, Suspense, useState} from "react";
+import ReactLazyPreload from "./utils/ReactLazyPreload";
 import {useStore, useSelector, useDispatch} from "react-redux"
 import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
-import Navigation from "./components/navigation/Navigation";
-
-
+const  Navigation = ReactLazyPreload(()=>import("./components/navigation/Navigation"));
 import "./App.scss"
+import Routes from "./Routes"
 
-import routes from "./routes"
 import {Route, Switch} from "react-router-dom";
-
 import {fetchCurrentAuth} from "store/actions/authAction"
 import Footer from "./components/footer/Footer";
 import api, {getApi} from "./apis";
 import Backdrop from "./components/UI/Backdrop/Backdrop";
 
-
 function App(props) {
-  
+
   let dispatch = useDispatch()
-  
+
   let { authState, postState, appState} = useSelector((state) => {
 
     return {
@@ -31,40 +28,21 @@ function App(props) {
 
     // here should use memo to render Navigation...
     const [expandDropdown, setExpandDropdown] = useState("")
-
-  function makePost(){
-    getApi().post("/api/posts", {name: "ALex"}).then(r=>{
-      console.log(r)
-    }).catch(ex=>{
-      console.log(ex)
-    })
-  }
   
   React.useEffect(() => {
-    // getApi().get("/api/test").then(r=>{
-    //   console.log(r)
-    // }).catch(ex=>{
-    //   console.log(ex)
-    // })
-    //
-    // getApi().get("/api/posts").then(r=>{
-    //   console.log(r)
-    // }).catch(ex=>{
-    //   console.log(ex)
-    // })
     let html = window.document.children[0]
     let theme = window.localStorage.getItem("theme")
     if(theme){
       html.classList.add(theme)
     }
-    
+
       const loader = document.querySelector(".loader")
       if(loader) {
           loader.parentElement.removeChild(loader)
       }
 
-
       fetchCurrentAuth(dispatch)
+
       api.post("/api/add-cookie").then(r=>{
          dispatch({
              type: "SET_VISITORS",
@@ -77,7 +55,6 @@ function App(props) {
           console.log(ex.message)
       })
   }, [])
-
 
     function handleCloseAuthMenu(){
         setExpandDropdown("")
@@ -93,15 +70,17 @@ function App(props) {
 
   return (
     <div className="App bg-white dark:bg-dark-800 ">
-      {/*<button onClick={makePost}>Make Post</button>*/}
+
         { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
-        
-          <Navigation
+
+          <Suspense fallback={<h1>Loading</h1>}>
+            <Navigation
               handleSetExpandDropdown={handleSetExpandDropdown}
               expandDropdown={expandDropdown}
               postState={postState}
               authState={authState}
-          />
+            />
+          </Suspense>
             <div
              className="App-Content">
                 <div onClick={handleCloseAuthMenu}
@@ -111,12 +90,8 @@ function App(props) {
                       ].join(" ")}>
                 </div>
                   <div className="viewport">
-                      <Switch>
-                          <Suspense fallback={<ProgressBar/>}>
-                              {routes(!!authState.id).map((route, i) => <Route key={i} {...route} />)}
-                          </Suspense>
-                      </Switch>
-          
+                     <Routes authState={authState} />
+                
                 </div>
           <Footer/>
         </div>
@@ -125,5 +100,7 @@ function App(props) {
 
   )
 }
+
+
 
 export default App

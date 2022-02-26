@@ -231,7 +231,7 @@ const ProfilePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="container">
+                <div className="container px-4">
                     <h4 className="title text-lg text-center mt-4 dark_subtitle">{ownPosts && ownPosts.length} Stories
                         by {author.first_name} {author.last_name}</h4>
 
@@ -239,7 +239,8 @@ const ProfilePage = () => {
                     <div className="user-content-wrapper">
                         {authState._id === author._id &&
                         <div className="my-4">
-                            <Link className="btn btn-outline dark_subtitle " to="/admin/dashboard/add-post/null">Make A Post</Link>
+                            {/*<Link className="btn btn-outline dark_subtitle " to="/admin/dashboard/add-post/null">Make A Post</Link>*/}
+                            <PreloadLink className="btn btn-outline dark_subtitle " to="/admin/dashboard/add-post/null">Make A Post</PreloadLink>
                         </div>
                         }
 

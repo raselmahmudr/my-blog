@@ -9,14 +9,12 @@ import {filterPost} from "../../store/actions/postAction";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faHome,
   faSearch,
   faSignInAlt,
   faSignOutAlt,
   faUserAlt,
   faUserCircle,
   faSignIn,
-  faUsers
 } from '@fortawesome/pro-solid-svg-icons'
 
 import {faAdn} from "@fortawesome/pro-brands-svg-icons";
@@ -46,26 +44,6 @@ const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://w
       <tspan x="0" y="0">DEV STORY</tspan></text>
   </g>
 </svg>
-
-
-// const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40.552" height="35.702" viewBox="0 0 40.552 35.702">
-//   <defs>
-//     <radialGradient id="radial-gradient" cx="0.698" cy="0.478" r="3.151" gradientTransform="matrix(1, 0.003, -0.001, 0.192, 0, 0.385)" gradientUnits="objectBoundingBox">
-//       <stop offset="0" stop-color="#3d2ffb"/>
-//       <stop offset="0.573" stop-color="#8981eb"/>
-//       <stop offset="0.979" stop-color="#a8a2ff"/>
-//       <stop offset="1" stop-color="#efeff1"/>
-//     </radialGradient>
-//   </defs>
-//   <g id="Group_109" data-name="Group 109" transform="translate(-19.463 -18.341)">
-//     <rect id="Rectangle_31" data-name="Rectangle 31" width="6.388" height="35.333" rx="2.51" transform="matrix(0.857, 0.515, -0.515, 0.857, 38.317, 18.341)" fill="url(#radial-gradient)"/>
-//     <rect id="Rectangle_32" data-name="Rectangle 32" width="5.847" height="35.781" rx="2.297" transform="matrix(0.857, 0.515, -0.515, 0.857, 47.039, 19.593)" fill="url(#radial-gradient)"/>
-//     <rect id="Rectangle_33" data-name="Rectangle 33" width="5.847" height="33.985" rx="2.297" transform="matrix(0.857, 0.515, -0.515, 0.857, 55.003, 21.901)" fill="url(#radial-gradient)"/>
-//     <rect id="Rectangle_34" data-name="Rectangle 34" width="5.371" height="12.637" rx="2.11" transform="matrix(0.857, 0.515, -0.515, 0.857, 55.265, 35.608)" fill="url(#radial-gradient)"/>
-//     <rect id="Rectangle_35" data-name="Rectangle 35" width="5.371" height="12.637" rx="2.11" transform="matrix(0.857, 0.515, -0.515, 0.857, 25.972, 25.464)" fill="url(#radial-gradient)"/>
-//   </g>
-// </svg>
-
 
 
 const Navigation = (props) => {
@@ -278,9 +256,25 @@ const Navigation = (props) => {
             
             <ul className="nav_items">
               <li className="nav-item  md:hidden ">
-                  <Link to="/auth/join" className="flex">
-                    <FontAwesomeIcon icon={faSignInAlt} className="text-base text-md text-gray-500" />
-                  </Link>
+                { authState._id
+                  ? (
+                     <div                   onMouseLeave={()=>handleSetExpandDropdown("")}>
+                       {authState.avatar
+                         ? <img
+                              className="w-5 rounded-full flex mr-2"
+                              src={fullLink( authState.avatar)}
+            
+                              onClick={openMenuHandler}
+                         />
+                         : <FontAwesomeIcon icon={faUserCircle} className="flex text-md text-gray-600 mr-2" />}
+                       {authDropdown(expandDropdown === "user_menu")}
+                     </div>
+                    ) : (
+                    <Link to="/auth/join" className="flex">
+                      <FontAwesomeIcon icon={faSignInAlt} className="text-base text-md text-gray-500" />
+                    </Link>
+                  ) }
+                  
               </li>
             </ul>
             

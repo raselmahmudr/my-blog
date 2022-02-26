@@ -102,11 +102,11 @@ const SignUp = (props) => {
 		"continue": false
 	})
 	const [userData, setUserData] = React.useState({
-		firstName: "Rasel",
-		lastName: "Mahmud",
-		email: "rasel@gmail.com",
-		password: "123",
-		confirmPassword: "123",
+		firstName: "",
+		lastName: "",
+		email: "",
+		password: "",
+		confirmPassword: "",
 	})
 	
 	const [stepNumber, setStepNumber] = React.useState(0)

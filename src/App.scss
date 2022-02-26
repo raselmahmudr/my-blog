@@ -327,3 +327,10 @@ a{
 .dark_title{ @apply dark:text-gray-200;}
 .dark_subtitle{ @apply dark:text-gray-300;}
 .dark_gray{ @apply dark:text-gray-400;}
+.post_link_a{
+  color: inherit !important;
+  cursor: pointer;
+  &:hover{
+    color: inherit !important;
+  }
+}

@@ -103,8 +103,7 @@
               }
             },
           },
-          // variants: {
-          //
+          variants: {
           //   accessibility: ['responsive', 'focus-within', 'focus'],
           //   alignContent: ['responsive'],
           //   alignItems: ['responsive'],
@@ -249,7 +248,7 @@
           //   wordBreak: ['responsive'],
           //   zIndex: ['responsive']
           //
-          // },
+          },
           // plugins: [],
           corePlugins:[
             "alignContent",

@@ -1,11 +1,17 @@
 const initialState = {
   posts: [
-
   ],
+  
   postDetails: {},
-  searchResultPosts: [],
+  
+  searchPosts: [],
   searchValue: "",
-  likes: []
+  
+  likes: [],
+  topPosts: {
+    posts: [],
+    last_time: "" // Date
+  }
 }
 
 
@@ -13,10 +19,17 @@ export default function (state = initialState, action) {
   let updatedState = {...state}
   let post_id;
   let index;
+  
   switch (action.type) {
     case "FETCH_POSTS":
       updatedState.posts = action.payload
       updatedState.searchResultPosts = action.payload
+      return updatedState
+    
+    case "FETCH_TOP_POSTS":
+      // updatedState.posts = action.payload
+      // updatedState.searchResultPosts = action.payload
+      updatedState.topPosts.posts = action.payload
       return updatedState
 
     case "FETCH_POST":
@@ -34,7 +47,7 @@ export default function (state = initialState, action) {
       return updatedState
 
     case "SEARCH_POSTS":
-      updatedState.searchResultPosts = action.payload
+      updatedState.searchPosts = action.payload
       return updatedState
     
     case "SET_POST_SEARCH_VALUE":

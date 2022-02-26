@@ -14,7 +14,7 @@ const Footer = () => {
     const appState = useSelector(state=>state.appState)
 
   return (
-    <div className="bg-primary py-5">
+    <div className="bg-primary py-5 dark:bg-dark-900">
         <div className="container-1200 px-4">
             <div className="footer text-center grid grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-4 md:text-left ">
                 <div>
@@ -46,24 +46,22 @@ const Footer = () => {
                         </li>
                     </div>
 
-                    <h4 className="text-base text-gray-300 mb-2">© 2021, All Rights Reserved.</h4>
+                    <h4 className="text-base text-gray-300 mb-2">© {new Date().getFullYear()}, All Rights Reserved.</h4>
                 </div>
 
                 <div>
                     <h3 className="text-md text-gray-200 mb-2">Quick Link</h3>
                     <ul>
+                        <li className="text-sm"><Link className="text-gray-300" to="/auth/join" >Join</Link> </li>
                         <li className="text-sm"><Link className="text-gray-300" to="/admin/dashboard/add-post/null" >Create a Post</Link> </li>
-                        <li className="text-sm">
-                            <Link className="text-gray-300" to="/auth/login" >Login</Link> </li>
-                        <li className="text-sm">
-                            <Link className="text-gray-300" to="/auth/registration" >Registration</Link> </li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="text-md text-gray-200 mb-2">Authors</h3>
                     <ul>
-                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/rasel_mahmud/X71lHJqu_" >#Rasel Mahmud</PreloadLink> </li>
+                        <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/rasel_mahmud/620ff9e25cb6c343543bebc5" >#Rasel Mahmud</PreloadLink> </li>
+                        <li className="text-sm">  <Link className="text-gray-300" to="/author/profile/rasel_mahmud/620ff9e25cb6c343543bebc5" >#Rasel Mahmud</Link> </li>
                         <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Raju%20Sarker/4GsD7MSue" >#Raju Sarker</PreloadLink> </li>
                         <li className="text-sm">  <PreloadLink className="text-gray-300" to="/author/profile/Apele%20Mahmud/y6hXv1owV" >#Apele Mahmud</PreloadLink> </li>
                     </ul>
@@ -82,10 +80,10 @@ const Footer = () => {
 
             </div>
             {/*<h4 className="title text-md text-white">Project Start ON {new Date(start).toLocaleString()}</h4>*/}
-             <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded">
+             <div className="bg-gray-9 max-w-max mx-auto bg-opacity-50 rounded dark:bg-dark-800">
                 <div className="flex items-center justify-center text-gray-900  mt-4 md:mt-0">
-                    <h4 className="px-2 py-1 font-normal text-sm">Today Hits {appState.visitors.day_visitor  ? appState.visitors.day_visitor : 0}  </h4>
-                    <h4 className="px-2 py-1 text-sm font-normal">Total Visitor {appState.visitors.total_visitors ? appState.visitors.total_visitors : 0}  </h4>
+                    <h4 className="px-2 py-1 font-normal text-sm  dark_subtitle">Today Hits {appState.visitors.day_visitor  ? appState.visitors.day_visitor : 0}  </h4>
+                    <h4 className="px-2 py-1 text-sm font-normal  dark_subtitle">Total Visitor {appState.visitors.total_visitors ? appState.visitors.total_visitors : 0}  </h4>
                 </div>
             </div>
         </div>

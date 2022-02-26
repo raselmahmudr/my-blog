@@ -154,7 +154,10 @@ const LoginWithEmail = (props) => {
 	
 	const takeEmail = ()=>{
 		
-		async function handleNextStep(){
+		async function handleNextStep(e){
+			if(e.preventDefault) {
+				e.preventDefault()
+			}
 			setButtonState({...buttonState, continue: true})
 			if(userData.email){
 				let isValid = validateEmail(userData.email)
@@ -190,7 +193,7 @@ const LoginWithEmail = (props) => {
 		}
 		
 		return (
-			<form className="flex justify-center flex-col mt-10 mb-4 flex-1">
+			<form className="flex justify-center flex-col mt-10 mb-4 flex-1" onSubmit={handleNextStep}>
 				
 				<div className="flex flex-col flex-1 px-10">
 					<label htmlFor="" className="text-center mb-2 text-base title dark_title">Your email</label>
@@ -202,9 +205,11 @@ const LoginWithEmail = (props) => {
 								 className="material_input w-full text-center dark_subtitle" />
 				</div>
 				
-				<button type="button" onClick={handleNextStep}
+				<button type="submit"
 								className={["rounded-full  py-2 px-10 btn mt-4 w-min mx-auto bg-gray-10 dark:text-gray-300 dark:bg-dark-500",  !buttonState.continue  && "disable_btn"].join(" ")}
 				>Continue</button>
+				<span className="dark_subtitle text-center mt-3">Not have a account? <Link to="/auth/join/new"> Create a account new account</Link></span>
+				
 			</form>
 		)
 	}
