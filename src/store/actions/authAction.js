@@ -8,8 +8,17 @@ export const fetchCurrentAuth = (dispatch) => {
         type: "LOGIN",
         payload: response.data
       })
+      dispatch({
+        type: "SET_AUTH_LOADED",
+        payload: true
+      })
+      
     }
   }).catch(err=>{
+    dispatch({
+      type: "SET_AUTH_LOADED",
+      payload: true
+    })
     console.log(err.message)
   })
 }

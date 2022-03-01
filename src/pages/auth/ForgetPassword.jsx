@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {getApi} from "../../apis";
+import validateEmail from "../../utils/validateEmail";
 
 
 
@@ -27,10 +28,8 @@ const ResetPasswordForm = (props)=>{
 			message: ""
 		})
 		
-		let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-		
 		if(email && email.trim()){
-			let isMail = email.match(mailformat)
+			let isMail = validateEmail(email.trim())
 			if(isMail){
 				getApi().post("/api/auth/send/mail", {to: email}).then(r =>{
 					if(r.status === 201){
@@ -46,6 +45,11 @@ const ResetPasswordForm = (props)=>{
 					})
 					console.log(ex)
 				})
+			} else {
+				setSendMailState({
+					status: 400,
+					message: "Invalid Email"
+				})
 			}
 		} else {
 			setSendMailState({
@@ -59,31 +63,31 @@ const ResetPasswordForm = (props)=>{
 		return <form onSubmit={handleSubmit} className="py-5">
 			<div className=" flex mb-2 flex-col">
 				<label
-					className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4 required"
+					className="font-medium min-w-100px block mb-1 text-sm font-400 dark:text-dark-0 text-gray-dark-4 required"
 					htmlFor="">Your Email</label>
 				<input
 					onChange={(e) => setEmail(e.target.value)}
 					value={email}
 					placeholder="Enter Your Email."
-					className="input-elem" type="text" name="email"/>
+					className="input-elem dark:bg-dark-600 dark_subtitle" type="text" name="email"/>
 			</div>
 			
 			<div>
-				<button className="btn">Send a mail</button>
-				<Link to="/auth/login" type="button" className="ml-2 btn">Back to login</Link>
+				<button className="btn dark:text-dark-0  dark_subtitle dark:bg-dark-600 text-gray-dark-4">Send a mail</button>
+				<Link to="/auth/join/email" type="button" className="ml-2 btn  dark_subtitle dark:bg-dark-600 dark:text-dark-0 text-gray-dark-4">Back to login</Link>
 			</div>
 		</form>
 	}
 	
 	return (
 		<div>
-			<h2 className="font-bold mb-4">Reset Password</h2>
+			<h2 className="font-medium mb-4 dark_title">Reset Password</h2>
 			
-			<h4 className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4">We will send you a mail. that can be reset your password</h4>
+			<h4 className="min-w-100px block text-base font-400 text-dark-0">We will send you a mail. that can be reset your password</h4>
 			
 			{ sendMailState.status !== 200 ? 	(
 				<div>
-					{sendMailState && sendMailState.message && <div className="bg-gray-9 p-2 min-h-40">
+					{sendMailState && sendMailState.message && <div className="bg-gray-9 dark:bg-dark-400 p-2 min-h-40">
 						<p className="text-red-400">{sendMailState.message}</p>
 					</div>}
 					{inputField()}
@@ -103,9 +107,9 @@ const ResetPasswordForm = (props)=>{
 
 const ForgetPassword = (props) => {
 	return (
-		<div className="container mx-auto">
+		<div className="container-1000 mx-auto">
 			
-			<div className="bg-white px-6 py-4 rounded-5 max-w-xl mx-auto">
+			<div className="px-6 py-4 mt-4 rounded-5 max-w-xl mx-auto">
 			<ResetPasswordForm {...props} />
 		</div>
 		</div>

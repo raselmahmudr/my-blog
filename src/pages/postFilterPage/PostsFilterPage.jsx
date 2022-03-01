@@ -4,21 +4,25 @@ import queryString from "query-string"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import "./styles.scss";
 import {Link, useHistory, useLocation, useParams} from "react-router-dom";
-import {deletePost, fetchPosts, filterPost, filterPostUsingTag} from "../../store/actions/postAction";
+import {
+  deletePost,
+  filterPostUsingTag,
+  filterPostUsingText
+} from "../../store/actions/postAction";
 import Loader from "../../components/UI/Loader";
 import {faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
+
+
 
 import ReactLazyPreload from "../../utils/ReactLazyPreload";
 
 const RenderPosts  =  ReactLazyPreload(()=>import("../../components/RenderPosts/RenderPosts"));
 
-
-
 const PostsFilterPage = (props) => {
   const [isLoading, setLoading] = React.useState(false)
 
   const location = useLocation()
-  
+
   const {postState, authState} = props
   const [postDetail, setPostDetail] = React.useState({})
   const [commentPagination, setCommentPagination] = React.useState({
@@ -26,23 +30,32 @@ const PostsFilterPage = (props) => {
     currentPage: 1
   })
 
-
   const dispatch = useDispatch()
   const history = useHistory()
-  const params = useParams()
-
 
   useEffect(()=>{
     let val = queryString.parse(history.location.search)
     if(val.tag){
-      filterPostUsingTag(dispatch, [val.tag])
+      filterPostUsingTag(dispatch, val.tag)
+      dispatch({
+        type: "SET_POST_SEARCH_VALUE",
+        payload: val.tag
+      })
+    } else if(val.text) {
+      filterPostUsingText(dispatch, val.text)
+      dispatch({
+        type: "SET_POST_SEARCH_VALUE",
+        payload: val.text
+      })
     }
+
     // if(postState.posts.length < 1) {
     //   setLoading(true)
     //   // fetchPosts(dispatch, location.pathname, () => setLoading(false))
     // }
-  }, [])
-  
+
+  }, [history.location.search])
+
 
   // useEffect(async () => {
   //   let val = qs.search
@@ -63,7 +76,7 @@ const PostsFilterPage = (props) => {
   //   console.log(qs)
   // }, [history.location.search])
 
-  
+
   let updatedComments = []
 
 
@@ -78,48 +91,42 @@ const PostsFilterPage = (props) => {
       console.log(isDeleted)
     })
   }
-  
-  
+
+
   return (
     <div className="container-1000 min-h-viewport">
 
       <div className="px-0">
         <div className="posts_wrapper">
           <div className="filter_items mt-0">
-           
-              <Link to="/" className="font-medium">Back to Homepage</Link>
-    
-            {postState.searchValue && <ul className="flex align-center">
-              <h4 className="title">search by :</h4>
-              <h4 className="title search_text">
-                {postState.searchValue}
-              </h4>
-              <FontAwesomeIcon icon={faTimesCircle}  className="ml-5 cursor-pointer text-red-400" onClick={handleClearPostSearch}/>
-            < /ul>
-            }
+            <Link to="/" className="font-medium">Back to Homepage</Link>
           </div>
 
           <div className="mb-2"/>
-          
+
           <div className="flex justify-between bg-gray-100 dark:bg-dark-600 py-4 px-2 rounded">
-           <div className="flex align-center">
-             <div>Filter By:</div>
-             <h2>MEtaData</h2>
+           <div className="flex align-center dark:text-white">
+             <div className="mr-2 no-wrap">Search by: </div>
+             <h2 className="rounded "> {postState.searchValue}</h2>
+             <FontAwesomeIcon icon={faTimesCircle} className="ml-2 cursor-pointer text-red-400" onClick={handleClearPostSearch}/>
            </div>
-            <div className="flex align-center">
-              <span>Sort By:</span>
-              <h2>Created</h2>
-            </div>
+            {/*<div className="no-wrap flex align-center dark:text-white">*/}
+            {/*  <span>Sort By:</span>*/}
+            {/*  <h2>Created</h2>*/}
+            {/*</div>*/}
           </div>
-          
+
             <div className="mx-auto flex justify-center">
               { isLoading && <Loader/>  }
             </div>
-            
-          
+
+
             {
               postState.searchPosts.length <= 0 ? (
-              <h4 className="title text-sm"> {!isLoading && `not posts matched with ${postState.searchValue}` }</h4>
+              <h1 className="mt-10 dark_title title text-center text-xl">
+                {!isLoading && `Not posts matched with` }
+                <span className="text-red-500">{postState.searchValue}</span>
+              </h1>
               ) : (
                 <div className="mt-4">
                   <Suspense fallback={<h1>Loading..</h1>}>

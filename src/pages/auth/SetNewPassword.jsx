@@ -60,35 +60,39 @@ const SetNewPassword = (props)=>{
 				})
 			}
 			
-			getApi().post("/api/auth/reset-password", {
-				token: params.token,
-				password: passwordData.password
-			}).then(r => {
-				if(r.status === 201){
-					id && clearTimeout(id)
-					setActionState({
-						status: 200,
-						message: "Your password change success"
-					})
-					
-					id = setTimeout(()=>{
-						dispatch({
-							type: "LOGIN",
-							payload: r.data
+			getApi().post("/api/auth/password-reset-session-check", {token: params.token}).then(doc=>{
+				if(doc.status === 200){
+					getApi().post("/api/auth/reset-password", {
+						token: params.token,
+						password: passwordData.password
+					}).then(r => {
+						
+						if(r.status === 201){
+							id && clearTimeout(id)
+							setActionState({
+								status: 200,
+								message: "Your password change success"
+							})
+							
+							id = setTimeout(()=>{
+								dispatch({
+									type: "LOGIN",
+									payload: r.data
+								})
+							}, 1000)
+							
+						}
+					}).catch(ex=>{
+						setActionState({
+							status: 400,
+							message: "Password reset session is finished"
 						})
-					}, 300)
-					
+					})
 				}
 			}).catch(ex=>{
-				setActionState({
-					status: 400,
-					message: ex.response.data.message
-				})
+				setSession(false)
 			})
-			
-			
-			
-			
+
 		} else {
 			setActionState({
 				status: 400,
@@ -105,14 +109,13 @@ const SetNewPassword = (props)=>{
 	}
 	
 	return (
-		<div className="mt-4">
+		<div className="container-1000 mx-auto">
 			
-			
-			
+			<div className="px-6 py-4 mt-4 rounded-5 max-w-xl mx-auto">
 			
 			{isSession ? (
 					<div>
-						<h2 className="font-bold mb-1">Set New Password</h2>
+						<h2 className="font-bold mb-1 text-center text-xl dark_title  ">Set New Password</h2>
 						
 						
 							{ actionState.message && (
@@ -127,31 +130,32 @@ const SetNewPassword = (props)=>{
 						
 							<div className=" flex mb-2 flex-col">
 								<label
-									className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4 required"
+									className="mb-1 font-medium dark:text-dark-0 min-w-100px block text-sm font-400 text-gray-dark-4 required"
 									htmlFor="">New Password</label>
 								<input
 									onChange={onChange}
 									value={passwordData.password}
 									placeholder="Enter new password."
-									className="input-elem" type="text"
+									className="input-elem dark:bg-dark-600 dark:text-gray-300"
+									type="text"
 									name="password"
 								/>
 							</div>
-							<div className=" flex mb-2 flex-col">
+							<div className=" flex mb-3 flex-col mt-3">
 								<label
-									className="font-medium min-w-100px block text-sm font-400 text-gray-dark-4 required"
+									className="mb-1 font-medium min-w-100px block text-sm font-400 text-gray-dark-4 dark:text-dark-0 required"
 									htmlFor="">Re New Password</label>
 								<input
 									onChange={onChange}
 									value={passwordData.rePassword}
 									placeholder="Enter new password."
-									className="input-elem"
+									className="input-elem dark:bg-dark-600 dark:text-gray-300"
 									type="text"
 									name="rePassword" />
 							</div>
 							
 							<div>
-								<button className="btn">Change Password</button>
+								<button type={"submit"} className="btn shadow-md dark_subtitle dark:bg-dark-600">Change Password</button>
 							</div>
 						</form>
 					</div>
@@ -161,13 +165,14 @@ const SetNewPassword = (props)=>{
 					<p>Your Password reset session end. please retry password reset request to click forget password button.</p>
 					
 					<span className="cursor-pointer text-blue-400 p-px">
-						<Link to="/auth/login/reset-password">Forget password ?</Link>
+						<Link to="/auth/join/reset-password">Forget password ?</Link>
 					</span>
 					
 				</div>
 			)}
 			
 			
+		</div>
 		</div>
 	)
 }

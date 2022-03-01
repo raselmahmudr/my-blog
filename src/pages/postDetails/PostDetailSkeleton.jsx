@@ -131,8 +131,10 @@ const SkeletonContent = () => {
 
 const PostDetailSkeleton = (props) => {
     return (
-        <div className="mx-3">
-            {props.children}
+        <div className="container-1200">
+            <div className="">
+                {props.children}
+            </div>
         </div>
 
     );

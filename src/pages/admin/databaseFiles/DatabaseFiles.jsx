@@ -207,26 +207,23 @@ const DatabaseFiles = () => {
 
 
     return (
-        <div className="container px-2">
-            <h1 className="text-center mt-2">Server Database Files</h1>
-            <button className="btn">
-                <Link to="/admin/dashboard">Back to Dashboard</Link>
-            </button>
+        <div className="container-1200 px-4 min-h-viewport">
+            <h1 className="text-center mt-2 dark_subtitle">Server Database Files</h1>
 
             { fileContent && fileContent.path && renderFileContent() }
 
             <div className="flex flex-col justify-between">
                 <div className="mt-4">
                     <div className="flex mb-1 items-center">
-                        <h4>Markdown Files</h4>
+                        <h4 className="dark_subtitle p-1.5">Markdown Files</h4>
                         <button
                             onClick={()=>markdownFileChooser.current && markdownFileChooser.current.click()}
-                            className="ml-5">Upload a Markdown File</button>
+                            className="ml-5 dark_subtitle dark:bg-dark-600 p-1.5 rounded">Upload a Markdown File</button>
                         <input onChange={handleFileChange} name="database" type="file" ref={databaseFileChooser}  hidden={true}/>
                         <input onChange={handleFileChange} name="markdown" type="file" ref={markdownFileChooser} hidden={true}/>
                     </div>
                     <div className="overflow-x-auto">
-                        {renderTable(state.markdownFiles)}
+                        {state.markdownFiles && state.markdownFiles.length > 0 && renderTable(state.markdownFiles)}
                     </div>
                 </div>
             </div>

@@ -13,10 +13,9 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css"
-import blobToBase64 from "../../utils/blobToBase64";
-// import base64ToBlob from "../../utils/base64ToBlob";
 import Loader from "../../components/UI/Loader";
 import {CSSTransition} from "react-transition-group";
+import PreloadLink from "../../components/preloadLink/PreloadLink";
 
 const AddPost = (props) => {
 
@@ -31,13 +30,12 @@ const AddPost = (props) => {
     message: ""
   })
   const imageInputRef = React.useRef(null)
-  const coverPhotoInputRef = React.useRef(null)
 
   const history = useHistory()
 
-
   const [markdown_string, setMarkdown_string] = React.useState("")
 
+  
   let [post, setPost] = React.useState({
     title: "",
     tags: [],
@@ -46,9 +44,7 @@ const AddPost = (props) => {
     isUpdated: false,
     mdContent: ""
   })
-
-  const [cover, serCover] = React.useState({name: "", base: "", blob: ""})
-
+  
   const params = useParams()
 
   
@@ -62,7 +58,7 @@ const AddPost = (props) => {
           return hljs.highlight(lang, str).value
         } catch (__) {}
       }
-      return '' // use external default escaping
+      return "" // use external default escaping
     }
   })
 
@@ -96,14 +92,7 @@ const AddPost = (props) => {
     }
     setPost(updatedPost)
   }
-
-  function handleChangeCoverPhoto(e){
-    let file = e.target.files[0]
-    blobToBase64(file, (base)=>{
-      serCover({name: file.name, base: base, blob: file})
-    })
-  }
-
+  
   async function addPostHandler(e){
     e.preventDefault()
     const { isUpdated, _id, title, tags, cover_url } = post
@@ -274,18 +263,19 @@ const AddPost = (props) => {
   function inputWrapper() {
     return (
         <div className="input_wrapper input-elem dark:bg-dark-600 dark_subtitle flex justify-between">
-          <input name="cover " onChange={handleChange} value={post.cover}
-             className="outline-none w-full bg-transparent "
+          <input name="cover" onChange={handleChange}
+                 value={post.cover}
+             className="outline-none w-full bg-transparent dark_subtitle "
              type="text" placeholder="Paster image full url" />
-          <button onClick={()=>coverPhotoInputRef.current && coverPhotoInputRef.current.click()} className="cursor-pointer">Upload</button>
+          {/*<button onClick={()=>coverPhotoInputRef.current && coverPhotoInputRef.current.click()} className="cursor-pointer">Upload</button>*/}
         </div>
     )
   }
   
   return (
-    <div className="container px-2 mt-4">
+    <div className="container-1000 px-4 mt-4">
       <div>
-        <button onClick={()=> history.goBack() } className="btn dark:bg-dark-600 dark_subtitle">Back to Profile</button>
+        <PreloadLink to={`/author/profile/${authState.first_name}/${authState._id}`} className="font-medium text-primary ">Back to Profile</PreloadLink>
       </div>
       <h1 className="title text-lg text-center font-bold dark_title">{post.isUpdated ? "Update Post" : "Add New Post"}</h1>
       
@@ -315,19 +305,17 @@ const AddPost = (props) => {
           <div className="form-group flex-col">
             <label className="block no-wrap text-sm dark_subtitle" htmlFor="">Post cover photo</label>
             {inputWrapper()}
-            <input
-              type="file" ref={coverPhotoInputRef} hidden={true} accept="image/*" onChange={handleChangeCoverPhoto} />
+            {/*<input type="file" ref={coverPhotoInputRef} hidden={true} accept="image/*" onChange={handleChangeCoverPhoto} />*/}
           </div>
           <div className="w-full">
-            {cover.base && (
-                <img className="w-full" src={cover.base} alt="" />
-            )}
+            {/*{cover.base && (*/}
+            {/*    <img className="w-full" src={cover.base} alt="" />*/}
+            {/*)}*/}
           </div>
           <div className="w-full">
             {post.cover && (
               <img className="w-full" src={fullLink(post.cover)} alt=""/>
             )}
-
           </div>
           
           <div className="form-group flex-col">
@@ -337,8 +325,11 @@ const AddPost = (props) => {
 
           <div>
              <div>
-               <button type="button" onClick={()=>imageInputRef.current && imageInputRef.current.click()}
-                 className="btn btn-info mb-2 ">Upload a Image for Markdown CDN link </button>
+               <h5
+                 onClick={()=>imageInputRef.current && imageInputRef.current.click()}
+                 className="btn-info btn w-max-width mb-2 ">
+                 Upload a Image for Markdown CDN link
+               </h5>
                <input onChange={handleUploadMarkdownImage} type="file" accept="image/*" hidden={true} ref={imageInputRef}/>
                { loadingState.id === "photo_upload" && loadingState.isLoading && (
                    <div className="flex flex-col  items-center">
@@ -369,7 +360,7 @@ const AddPost = (props) => {
               <textarea
                 onChange={handleChange}
                 name="summary"
-                rows={8}
+                rows={5}
                 defaultValue={post.summary}
                 className="input-elem dark:bg-dark-600 dark_subtitle"  />
             </div>
@@ -388,7 +379,7 @@ const AddPost = (props) => {
 
           </div>
           
-          <button  className="btn btn-primary dark:bg-dark-600 dark_subtitle">{post.isUpdated ? "Update" : "Add Post"}</button>
+          <button type="submit" className="btn btn-primary dark:bg-dark-600 dark_subtitle">{post.isUpdated ? "Update" : "Add Post"}</button>
 
         </form>
         

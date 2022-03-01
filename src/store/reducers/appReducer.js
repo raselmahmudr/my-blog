@@ -3,6 +3,7 @@ const initialState = {
     as: "transparent", //  "transparent" | "backdrop",
     isOpen: false
   },
+  isAuthLoaded: false,
   isOpenBackdrop: false,
   visitors: {
     day_visitor: 0,
@@ -23,8 +24,8 @@ export default function (state = initialState, action) {
       }
     return updateState
 
-    case "TOGGLE_APPMASK":
     
+    case "TOGGLE_APPMASK":
       if(action.payload){
         // payload = {
         //   as: "transparent", //  "transparent" | "backdrop",
@@ -34,11 +35,13 @@ export default function (state = initialState, action) {
       } else {
         updateState.appMask = !updateState.appMask.isOpen
       }
-    return updateState
+      return updateState
 
+    case "SET_AUTH_LOADED":
+      updateState.isAuthLoaded = action.payload
+      return updateState
 
     case "SET_VISITORS":
-
       updateState.visitors = {
         ...updateState,
         ...action.payload

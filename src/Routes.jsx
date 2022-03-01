@@ -2,12 +2,13 @@ import React, {lazy, Suspense} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
 import ReactLazyPreload from "./utils/ReactLazyPreload";
 import ProgressBar from "./components/UI/topProgressBar/TopProgressBar";
+import AddPostSkeleton from "./pages/admin/AddPostSkeleton";
 
-const AllSignIn  = ReactLazyPreload(()=>import("./pages/auth/AllSignIn"));
+const AllSignInLite  = ReactLazyPreload(()=>import("./pages/auth/AllSignInLite"));
 const AuthService = ReactLazyPreload(()=>import("./pages/auth/AuthService"));
-const PostsFilterPage = ReactLazyPreload(()=>import("./pages/postFilterPage/PostsFilterPage"));
+const PostsFilterPageLite = ReactLazyPreload(()=>import("./pages/postFilterPage/PostsFilterPageLite"));
 
-const HomePage = ReactLazyPreload(()=>import("./pages/homePage/Homepage"));
+const HomePageLite = ReactLazyPreload(()=>import("./pages/homePage/HomePageLite"));
 const About = ReactLazyPreload(()=>import("./components/about/About"));
 // const Posts = ReactLazyPreload(()=>import("./pages/posts/Posts"));
 // const Login = ReactLazyPreload(()=>import("./pages/auth/Login"));
@@ -17,27 +18,48 @@ const About = ReactLazyPreload(()=>import("./components/about/About"));
 
 const PostDetailSimple = ReactLazyPreload(()=>import("./pages/postDetails/PostDetailSimple"));
 
-// const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
-// const ForgetPassword = ReactLazyPreload(()=>import("src/pages/auth/ForgetPassword"));
+const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
 
 const Dashboard = ReactLazyPreload(()=>import("src/pages/admin/Dashboard"));
-const Profile = ReactLazyPreload(()=>import("src/pages/profilePage/ProfilePage"));
-
+const ProfilePageSimple = ReactLazyPreload(()=>import("src/pages/profilePage/ProfilePageSimple"));
 
 export const publicRoutes = [
-  {path: "/", exact: true, component: HomePage},
-  {path: "/search", exact: true, component: PostsFilterPage},
-  {path: "/author/profile/:username/:id", exact: true, component: Profile},
+  {path: "/", exact: true, component: HomePageLite},
+  {path: "/search", exact: true, component: PostsFilterPageLite},
+  {
+    path: "/author/profile/:username/:id",
+    exact: true,
+    component: ProfilePageSimple
+  },
   {path: "/posts/:slug/:id", exact: true, component: PostDetailSimple},
   {path: "/about", exact: true, component: About},
   {path: "/auth/callback/:authServiceName", exact: false, component: AuthService },
-    {path: "/admin/dashboard", component: Dashboard},  // nested routes
-  {path: "/auth/join", exact: false,  unProtected: true, redirectUrl: "/", component: AllSignIn}, // nested routes
+  {
+    path: "/admin/dashboard",
+    component: Dashboard,
+    protected: true,
+    redirectUrl: "/auth/join",
+    authFetchInLoading: AddPostSkeleton
+  },  // nested routes
+  {
+    path: "/auth/add-post/null",
+    component: AddPost,
+    protected: true,
+    redirectUrl: "/auth/join",
+    authFetchInLoading: AddPostSkeleton
+  },  // nested routes
+  {
+    path: "/auth/join",
+    exact: false,
+    unProtected: true,
+    redirectUrl: "/",
+    component: AllSignInLite
+  }, // nested routes
 ]
 
 const Routes = (props)=> {
   
-  const { authState } = props
+  const { authState, isAuthLoaded } = props
   
   return (
     <Switch>
@@ -50,7 +72,12 @@ const Routes = (props)=> {
               <Route
                 path={route.path}
                 exact={route.exact}
-                render={(props) => authState._id ? <route.component {...props} />  : <Redirect to={route.redirectUrl} />  }
+                render={(props) =>
+                  authState._id
+                    ? <route.component {...props} />
+                    : isAuthLoaded
+                      ? <Redirect to={route.redirectUrl} />
+                      : route.authFetchInLoading && <route.authFetchInLoading />  }
               />
             )
           } else {

@@ -6,6 +6,7 @@ ul, li, h1, h3, h2, h4, h5, p{list-style: none; margin: 0; padding: 0; font-weig
 html{
   font-weight: 400;
   //font-size: 62%;
+  -webkit-tap-highlight-color: transparent;
 }
 body{
   background-color: #fff;
@@ -105,10 +106,10 @@ h1, h2, h3, h4, h5, h6 {
   outline: none;
   border: 1px solid var(--primary);
   padding: 5px 6px;
-  background: white;
+  //background: white;
   border-radius: 4px;
   width: 100%;
-  @apply border-primary border-opacity-50;
+  //@apply border-primary border-opacity-50;
   //background: var(--primary);
 }
 .radius-100{border-radius: 100%}
@@ -145,7 +146,7 @@ a{
   }
 }
 .no-wrap{white-space: nowrap}
-.h-60{height: 60px}
+.h-60px{height: 60px}
 .align-center{align-items: center}
 .flex-1{flex: 1}
 .flex-2{flex: 2}
@@ -334,3 +335,4 @@ a{
     color: inherit !important;
   }
 }
+.color-inherit{    color: inherit !important;}

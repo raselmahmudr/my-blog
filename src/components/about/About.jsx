@@ -4,9 +4,9 @@ const About = () => {
     return (
         <div>
 
-            <div className="container-1200 px-4">
+            <div className="container-1200 px-4 dark_subtitle">
 
-                <h4 className="text-center text-2xl font-medium mt-4">About My BLOG</h4>
+                <h4 className="text-center text-2xl font-medium mt-4 dark_title">About My BLOG</h4>
 
 
                 <h4 className="text-2xl mt-4">
@@ -19,7 +19,7 @@ const About = () => {
                     <p>Sign up for free so your writing can thrive in a network supported by millions of readers — not ads.</p>
                 </div>
 
-                <button className="btn btn-outline my-4">Start Writing</button>
+                <button className="btn btn-outline my-4 dark:bg-dark-600 dark_subtitle">Start Writing</button>
 
                 <h4 className="text-2xl font-medium text-md">Questions About My Blog </h4>
                 <div className="mt-3">

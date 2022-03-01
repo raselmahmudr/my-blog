@@ -4,8 +4,6 @@ import fullLink from "../../utils/fullLink";
 import  React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import PreloadLink from "../preloadLink/PreloadLink";
-import {filterPost} from "../../store/actions/postAction";
-
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -18,9 +16,10 @@ import {
 } from '@fortawesome/pro-solid-svg-icons'
 
 import {faAdn} from "@fortawesome/pro-brands-svg-icons";
-import {faMoon} from "@fortawesome/pro-solid-svg-icons";
+import {faMoon, faSun} from "@fortawesome/pro-solid-svg-icons";
+import withWidth from "../UI/withWidth/WithWidth";
 
-const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="153" height="27.851" viewBox="0 0 153 27.851">
+const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg"  width="153" height="27.851" viewBox="0 0 153 27.851">
   <defs>
     <radialGradient id="radial-gradient" cx="0.698" cy="0.478" r="3.151" gradientTransform="matrix(1, 0.003, -0.001, 0.192, 0, 0.385)" gradientUnits="objectBoundingBox">
       <stop offset="0" stop-color="#3d2ffb"/>
@@ -48,12 +47,33 @@ const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://w
 
 const Navigation = (props) => {
   
-  const {authState, postState, expandDropdown, handleSetExpandDropdown } = props
+  const {authState, postState, expandDropdown, handleSetExpandDropdown, innerWidth } = props
   
   const history = useHistory()
   const dispatch = useDispatch()
+  const [theme, setTheme] = React.useState("light")
+  
+  const [openMobileSearch, setOpenMobileSearch] = React.useState(false)
+  const [isMobile, setIsMobile] = React.useState(false)
 
-
+  React.useEffect(()=>{
+    let html = window.document.children[0]
+    let theme = window.localStorage.getItem("theme")
+    if(theme){
+      setTheme("dark")
+      html.classList.add(theme)
+    } else {
+      setTheme("light")
+    }
+  }, [])
+  
+  React.useEffect(()=>{
+    if(innerWidth > 768){
+      setIsMobile(false)
+    } else {
+      setIsMobile(true)
+    }
+  }, [innerWidth])
   
   function logoutRoutePush(){
     window.localStorage.setItem("token", "")
@@ -65,24 +85,24 @@ const Navigation = (props) => {
 
   function authDropdown(isShow) {
     return isShow && (
-      <div className="dropdown_nav">
-        <div className="min-w-200px card bg-white text-sm font-medium">
+      <div className="dropdown_nav shadow-md">
+        <div className="min-w-200px dark:bg-dark-600 bg-white text-sm font-medium">
           { authState._id ? (
             <>
               { authState.role === "admin" && (
                   <li className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-2">
-                    <FontAwesomeIcon icon={faAdn} className="mr-2 text-gray-800" />
-                    <PreloadLink className="block" onClick={()=>handleSetExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
+                    <FontAwesomeIcon icon={faAdn} className="mr-2 dark_title text-gray-800" />
+                    <PreloadLink className="block dark_subtitle" onClick={()=>handleSetExpandDropdown("")}  to="/admin/dashboard">Dashboard</PreloadLink>
                   </li>
               ) }
               <li  className="flex hover:bg-opacity-40 hover:bg-primary hover:text-white cursor-pointer px-2 py-2">
-                <PreloadLink className="block" to={`/author/profile/${authState.username}/${authState._id}`}>
-                  <FontAwesomeIcon icon={faUserAlt} className="mr-2 text-gray-800" />
+                <PreloadLink className="block dark_subtitle" to={`/author/profile/${authState.username}/${authState._id}`}>
+                  <FontAwesomeIcon icon={faUserAlt} className="mr-2 dark_title text-gray-800" />
                   Profile
                 </PreloadLink>
               </li>
               <li onClick={()=> logoutRoutePush("/user/profile") } className="flex hover:bg-primary hover:bg-opacity-40 hover:text-white cursor-pointer px-2 py-2">
-                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-gray-800" />
+                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 dark_title text-gray-800" />
                 Logout
               </li>
             </>
@@ -91,10 +111,7 @@ const Navigation = (props) => {
             className="flex flex-1 items-center hover:bg-primary hover:bg-opacity-40 hover:text-white  cursor-pointer  px-2 py-2"
             // onClick={()=> pushRoute("/auth/login") }
           >
-              <PreloadLink className="block" to="/auth/login">
-                <FontAwesomeIcon  className="mr-2 text-gray-800" icon={faSignIn} />
-                Login
-                </PreloadLink>
+              <PreloadLink className="block" to="/auth/login"><FontAwesomeIcon  className="mr-2 text-gray-800" icon={faSignIn} />Login</PreloadLink>
               </li>
             )
           }
@@ -104,16 +121,19 @@ const Navigation = (props) => {
   }
   
   function searchHandler(e) {
+    e.preventDefault()
+    setOpenMobileSearch(false)
     let val = postState.searchValue.trim().toLowerCase()
     if(val) {
-      let uniqArr = filterPost(postState.posts, val)
-      if (uniqArr.length > 0) {
-        dispatch({type: "SEARCH_POSTS", payload: uniqArr})
-        history.replace(`/?search=${val}`)
-      } else {
-        dispatch({type: "SEARCH_POSTS", payload: []})
-        history.replace(`/?search=${val}`)
-      }
+      history.replace(`/search?text=${val}`)
+      // let uniqArr = filterPost(postState.posts, val)
+      // if (uniqArr.length > 0) {
+      //   dispatch({type: "SEARCH_POSTS", payload: uniqArr})
+      //   history.replace(`/search?text=${val}`)
+      // } else {
+      //   dispatch({type: "SEARCH_POSTS", payload: []})
+      //   history.replace(`/?search=${val}`)
+      // }
     } else {
       dispatch({type: "SEARCH_POSTS", payload: postState.posts})
       history.replace(`/`)
@@ -121,8 +141,8 @@ const Navigation = (props) => {
   }
 
   function handleChange(e) {
-    if(e.target.value.trim()){
-      dispatch({type: "SET_POST_SEARCH_VALUE", payload: e.target.value.trim()})
+    if(e.target.value){
+      dispatch({type: "SET_POST_SEARCH_VALUE", payload: e.target.value})
     } else {
       dispatch({type: "SEARCH_POSTS", payload: postState.posts})
       dispatch({type: "SET_POST_SEARCH_VALUE", payload: ""})
@@ -153,17 +173,23 @@ const Navigation = (props) => {
     if(theme === "dark"){
       window.document.children[0].classList.remove("dark")
       localStorage.setItem("theme", "")
+      setTheme("light")
     } else {
       localStorage.setItem("theme", "dark")
       window.document.children[0].classList.add("dark")
+      setTheme("dark")
     }
   }
   
+  function showMobileSearchForm() {
+    setOpenMobileSearch(true)
+  }
+  
   return (
-    <>
+    <div>
       <div className="navigation bg-nav-light dark:bg-gray-900">
 
-        <div className="navigation__container px-2 md:px-5 ">
+        <div style={{ filter:  isMobile && openMobileSearch ? "blur(5px)" : ""}} className="navigation__container px-5 ">
           <ul className="main-nav ">
 
             <div className="nav-logo flex-4 md:flex-2   ">
@@ -188,47 +214,18 @@ const Navigation = (props) => {
                 type="text"
                 placeholder="Search posts"
               />
-              <FontAwesomeIcon icon={faSearch} className="pointer " onClick={searchHandler} />
+              <FontAwesomeIcon icon={faSearch} className="cursor-pointer text-gray-600 dark:text-gray-100 " onClick={searchHandler} />
             </div>
             {/* show on Mobile */}
-            <div className="flex mr-4 sm:hidden">
-              <FontAwesomeIcon icon={faSearch} className="pointer text-gray-500 " onClick={searchHandler} />
+            <div className="flex relative md:hidden">
+              <FontAwesomeIcon icon={faSearch} className="cursor-pointer pointer text-gray-500 text-md md:text-base " onClick={()=>setOpenMobileSearch(true)}   />
             </div>
             
-            {/*<div className="nav-center flex-5 md:flex-1">*/}
-            {/*  <ul className="nav_items flex  justify-end align-center">*/}
-            {/*    <li className="nav_item hidden md:flex ">*/}
-            {/*      <Link to="/" className="flex">*/}
-            {/*        <FontAwesomeIcon icon={faHome} className="text-md text-white" />*/}
-            {/*      </Link>*/}
-            {/*    </li>*/}
-            {/*  </ul>*/}
-            {/*</div>*/}
-  
+            
             <div className="nav-auth flex-5 hidden md:block">
               <ul className="nav_items flex justify-end align-center text-gray-600 dark:text-gray-300">
-                
-                {/*<div className="px-0 flex relative items-center"*/}
-                {/*     // onMouseLeave={()=>handleSetExpandDropdown("")}*/}
-                {/*     // onMouseEnter={()=>handleSetExpandDropdown("user_menu")}*/}
-                {/*     onClick={openMenuHandler} >*/}
-                {/*  { authState.id && <h4 className="hidden lg:block text-white font-medium mr-0">{authState.first_name}</h4>}*/}
-                {/*  <span className="avatar_logo">*/}
-                {/*    { authState.id ? authState.avatar ? (*/}
-                {/*            <img className="" src={fullLink( authState.avatar)} />*/}
-                {/*        ) : (*/}
-                {/*            <FontAwesomeIcon icon={faUserCircle} className="text-xl text-white" />*/}
-                {/*        )*/}
-                {/*        : (*/}
-                {/*            <FontAwesomeIcon icon={faUserCircle} className="text-white text-lg" />*/}
-                {/*        )*/}
-                {/*    }*/}
-                {/*  </span>*/}
-                {/*  {authDropdown(expandDropdown === "user_menu")}*/}
-                {/*</div>*/}
-                
                 <li className="nav-item"><NavLink className="nav_link" to="/about">Our Story</NavLink></li>
-                <li className="nav-item"><a className="nav_link" href="#">Write Story</a></li>
+                <li className="nav-item"><PreloadLink className="nav_link" to="/auth/add-post/null">Write Story</PreloadLink></li>
                 { authState._id
                   ? (
                     <div className="nav-item flex align-center relative"
@@ -236,56 +233,75 @@ const Navigation = (props) => {
                          onMouseEnter={()=>handleSetExpandDropdown("user_menu")}
                          onClick={openMenuHandler}
                     >
-                      <h4 className="mr-2">{authState.first_name
+                      <h4 className="">{authState.first_name
                         && authState.first_name.length > 15 ? authState.first_name.slice(0, 15)
                         : authState.first_name}
                       </h4>
-                      { authState.avatar
-                        ? <img className="w-5 rounded-full flex mr-2" src={fullLink( authState.avatar)} />
-                        : <FontAwesomeIcon icon={faUserCircle} className="flex text-md text-gray-600 mr-2" />
-                      }
+                      <div className="mx-4">
+                        { authState.avatar
+                          ? <img className="w-5 rounded-full flex" src={fullLink( authState.avatar)} />
+                          : <FontAwesomeIcon icon={faUserCircle} className="flex text-md text-gray-600 " />
+                        }
+                      </div>
                       {authDropdown(expandDropdown === "user_menu")}
                     </div>
-                  ) : <li className="nav-item"><NavLink className="nav_link" to="/auth/join">Sign In</NavLink></li>
-                }
-                <li className={"nav-item"}>
-                  <FontAwesomeIcon onClick={toggleDarkTheme} icon={faMoon} />
+                  ) : <li className="nav-item">
+                      <PreloadLink className="nav_link" to="/auth/join">Sign In</PreloadLink>
                 </li>
+                }
               </ul>
             </div>
             
-            <ul className="nav_items">
-              <li className="nav-item  md:hidden ">
+            <ul className="nav_items flex align-center">
+              <li className="nav-item md:hidden">
                 { authState._id
                   ? (
-                     <div                   onMouseLeave={()=>handleSetExpandDropdown("")}>
+                     <div className="mx-4" onMouseLeave={()=>handleSetExpandDropdown("")}>
                        {authState.avatar
                          ? <img
-                              className="w-5 rounded-full flex mr-2"
+                              className="w-5 rounded-full flex"
                               src={fullLink( authState.avatar)}
             
                               onClick={openMenuHandler}
                          />
-                         : <FontAwesomeIcon icon={faUserCircle} className="flex text-md text-gray-600 mr-2" />}
+                         : <FontAwesomeIcon icon={faUserCircle} className="flex text-md md:text-base text-gray-600" />}
                        {authDropdown(expandDropdown === "user_menu")}
                      </div>
                     ) : (
                     <Link to="/auth/join" className="flex">
-                      <FontAwesomeIcon icon={faSignInAlt} className="text-base text-md text-gray-500" />
+                      <FontAwesomeIcon icon={faSignInAlt} className="text-md mx-4 md:text-base  text-gray-500" />
                     </Link>
                   ) }
                   
               </li>
+              <li className={"nav-item"}>
+                <FontAwesomeIcon onClick={toggleDarkTheme} icon={ theme === "dark" ? faSun : faMoon} className={["flex text-md text-gray-600 md:text-base  cursor-pointer", theme === "dark" ? "text-white" : ""].join(" ")} />
+              </li>
             </ul>
             
           </ul>
-          
         </div>
+        
+        { isMobile && openMobileSearch && (
+          <div className="floating_search dark_subtitle ">
+            <form className="flex flex-1 justify-center" onSubmit={searchHandler}>
+              <div>
+                <input
+                  onChange={handleChange}
+                  className="rounded border-1 dark_subtitle text-dark-900 font-medium"
+                  value={postState.searchValue}
+                  type="text"
+                  placeholder="Search posts"/>
+              </div>
+              <button className="btn rounded bg-primary dark:dark_subtitle text-gray-100" type="submit">Search</button>
+            </form>
+          </div>
+        ) }
       </div>
-      <div className="h-60" />
-    </>
+      <div className="h-60px" />
+    </div>
   );
 };
 
 
-export default Navigation;
+export default withWidth(Navigation);

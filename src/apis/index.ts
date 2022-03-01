@@ -1,10 +1,18 @@
 import axios from "axios";
 
+
+// export const baseBackend = "http://localhost:8888"
+export const baseBackend = "https://rsl-my-blog-server.netlify.app"
+// export const baseBackend = "http://localhost:3300"
+
+
 // @ts-ignore
 export const backend = import.meta.env.MODE === "development"
+  // ? baseBackend +  "/.netlify/functions/server"
   ? "http://localhost:3300"
-  // : "http://localhost:3300"
-  : "https://confident-curie-8fac38.netlify.app/.netlify/functions/server"
+  // ? "http://localhost:8888/.netlify/functions/server"
+  // ? "http://192.168.43.170:3300"
+  : baseBackend + "/.netlify/functions/server"
 
 // export const backend = "http://localhost:6331/.netlify/functions/server"
 // export const backend = "http://localhost:5110/.netlify/functions/server"

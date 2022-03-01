@@ -13,83 +13,8 @@ const SetNewPassword = ReactLazyPreload(()=>import("src/pages/auth/SetNewPasswor
 import {FontAwesomeIcon} from  "@fortawesome/react-fontawesome"
 import {faEye} from "@fortawesome/pro-light-svg-icons";
 import api from "../../apis";
-
-
-const TakeUserInput = (props)=>{
-	const { handleChange, userData, message, buttonState, handleNextStep, handlePreviousStep, stepNumber, stepData } = props
-	const {name, label, type, btnLabel, placeholder} = stepData
-	
-	const [isDisableNext, setIsDisableNext] = React.useState(true)
-	
-	React.useEffect(()=>{
-		if(userData[name] && userData[name].trim()){
-			setIsDisableNext(false)
-		} else {
-			setIsDisableNext(true)
-		}
-	}, [userData[name]])
-	
-	// function handleNextStep(){
-	// 	if(userData.email){
-	// 		let isValid = validateEmail(userData.email)
-	// 		if (isValid) {
-	// 			setStep(2)
-	// 			setMessage("")
-	// 		} else {
-	// 			setMessage("Bad email format")
-	// 		}
-	//
-	// 	} else {
-	// 		setMessage("Please put your email")
-	// 	}
-	
-		function handleSubmit(e){
-			e.preventDefault()
-			handleNextStep && handleNextStep()
-		}
-		
-	
-		return (
-			<div>
-				{ stepData.step === 3 ? (
-					<div>sdf</div>
-				) : (
-					<form className="flex justify-center flex-col mt-10 mb-4 flex-1" onSubmit={handleSubmit}>
-						<div className="flex flex-col flex-1 px-10">
-							<label htmlFor="input" className="text-center mb-2 text-base title dark_subtitle">{label}</label>
-							<CSSTransition unmountOnExit={true} in={message} timeout={500} classNames="my-node" >
-								<label htmlFor="" className="error-label text-center mb-2 text-base title">{message}</label>
-							</CSSTransition>
-							<input
-								id="input"
-								onChange={handleChange}
-								name={name}
-								value={userData[name]}
-								type={type}
-								className="material_input w-full text-center dark_subtitle"
-							/>
-						</div>
-						
-						<div className="mt-4 flex justify-center">
-							{ stepNumber > 0 &&
-								<button type="button" onClick={handlePreviousStep} className="rounded-full py-2 btn w-min mx-1 px-5 bg-gray-10 dark:bg-dark-600 dark_subtitle">Back</button>
-							}
-							<button type="submit"
-								className={["rounded-full py-2 btn w-min" +
-								" mx-1 px-5 bg-gray-10 " +
-								"dark:bg-dark-600 " +
-								"dark_subtitle", isDisableNext && "disable_btn"].join(" ")}
-							>{btnLabel}
-							</button>
-						</div>
-						{/*<button type="button" onClick={handleNextStep} className="rounded-full  py-2 px-10 btn mt-4 w-min mx-auto bg-gray-10">{btnLabel}</button>*/}
-					</form>
-				)  }
-		
-			</div>
-		)
-		
-	}
+import TakeUserInputStep from "./TakeUserInputStep";
+import validateEmail from "../../utils/validateEmail";
 
 
 const SignUp = (props) => {
@@ -102,9 +27,9 @@ const SignUp = (props) => {
 		"continue": false
 	})
 	const [userData, setUserData] = React.useState({
-		firstName: "",
-		lastName: "",
-		email: "",
+		firstName: "mm",
+		lastName: "kkk",
+		email: "hjh@gmail.com",
 		password: "",
 		confirmPassword: "",
 	})
@@ -118,6 +43,10 @@ const SignUp = (props) => {
 			label: "First Name",
 			type: "text",
 			btnLabel: "Continue",
+			handleNextStep: ()=>{
+				setStepNumber(stepNumber + 1)
+				setMessage("")
+			},
 		},
 		{
 			step: 1,
@@ -125,31 +54,62 @@ const SignUp = (props) => {
 			label: "Last Name",
 			type: "text",
 			btnLabel: "Continue",
+			handlePreviousStep,
+			handleNextStep: ()=>{
+				setStepNumber(stepNumber + 1)
+				setMessage("")
+			},
 		},
 		{
 			step: 2,
-			asyncValidator:  ()=>{
-				return new Promise(async (r, s)=>{
-						try {
-							let response = await api.get(`/api/auth/user/${userData.email}`)
-							if (response.status === 200) {
-								r(false)
-							} else {
-								r(true) /// this email not registered
-							}
-						} catch (ex){
-							if(ex.response.status === 404){
-								r(true) /// this email not registered
-							} else {
-								s(ex.message)
-							}
-						}
-				})
-			},
+			// asyncValidator:  ()=>{
+			// 	return new Promise(async (r, s)=>{
+			// 			try {
+			// 				let response = await api.get(`/api/auth/user/${userData.email}`)
+			// 				if (response.status === 200) {
+			// 					r(false)
+			// 				} else {
+			// 					r(true) /// this email not registered
+			// 				}
+			// 			} catch (ex){
+			// 				if(ex.response.status === 404){
+			// 					r(true) /// this email not registered
+			// 				} else {
+			// 					s(ex.message)
+			// 				}
+			// 			}
+			// 	})
+			// },
 			name: "email",
 			label: "Email",
 			type: "email",
-			btnLabel: "Continue"
+			btnLabel: "Continue",
+			handlePreviousStep,
+			handleNextStep: async ()=>{
+				setMessage("")
+				
+				try {
+					let isValidMail = validateEmail(userData.email)
+					if(userData.email){
+						if(!isValidMail){
+							setMessage("Bad Mail format")
+							return
+						}
+					}
+					
+					let response = await api.get(`/api/auth/user/${userData.email}`)
+					if (response.status === 200) {
+						setMessage("User already registered")
+					} else {
+						 /// this email not registered
+						setStepNumber(stepNumber + 1)
+					}
+					
+				} catch (ex){
+					/// this email not registered
+					setStepNumber(stepNumber + 1)
+				}
+			},
 		}
 	]
 	
@@ -232,6 +192,7 @@ const SignUp = (props) => {
 			setMessage("Password required.")
 		}
 	}
+
 	
 	function renderNestedRoutes(){
 		return (
@@ -308,13 +269,7 @@ const SignUp = (props) => {
 		)
 	}
 	
-	const validateEmail = (email) => {
-		return String(email)
-			.toLowerCase()
-			.match(
-				/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-			);
-	};
+
 	
 	async function handleNextStep(e){
 		let step = stepData[stepNumber]
@@ -514,14 +469,14 @@ const SignUp = (props) => {
 			<div className="">
 				
 				<div className="mt-8">
-					<div className="mx-auto" style={{maxWidth: "400px"}}>
-						<h1 className="text-center mb-4 dark_title">Create a account</h1>
+					<div className="mx-auto my-4" style={{maxWidth: "400px"}}>
+						<h1 className="text-center mb-4 title text-3xl dark_title">Create a account</h1>
 						<p className="text-center dark_gray">Enter the email address associated with your account,
 							and we’ll send a magic link to your inbox.</p>
 						
 						
 						{ stepNumber <= 2 ? (
-							<TakeUserInput
+							<TakeUserInputStep
 								buttonState={buttonState}
 								stepNumber={stepNumber}
 								handleNextStep={handleNextStep}

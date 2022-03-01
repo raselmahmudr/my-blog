@@ -1,10 +1,9 @@
-import React, {lazy} from 'react';
+import React from 'react';
 import {Link, useParams} from "react-router-dom";
 
 import "./style.scss"
 import apis, {getApi} from "../../apis";
 import fullLink from "../../utils/fullLink";
-import api from "../../apis";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock,  faEye, faHeart } from "@fortawesome/pro-solid-svg-icons";
 import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
@@ -16,7 +15,6 @@ import PostDetailSkeleton from "./PostDetailSkeleton";
 import {faComment} from "@fortawesome/pro-solid-svg-icons";
 import AddComment from "../../components/comments/AddComment";
 import Comments from "../../components/comments/Comments";
-
 
 import AlertHandler from "../../components/AlertHandler/AlertHandler";
 
@@ -404,7 +402,7 @@ const PostDetails = (props) => {
         <div className="post_detail mt-4">
           {postDetails.author && <div className="post_author_description items-start">
             <div className="author_info__avatar">
-              <div className="avatar">
+              <div className="w-100 md:w-12">
                 {postDetails.author.avatar ? (
                   <img className="w-full rounded-full" src={fullLink(postDetails.author.avatar)} alt=""/>
                   // <img src={fullLink(postDetails.author.avatar)} alt=""/>
@@ -414,7 +412,7 @@ const PostDetails = (props) => {
               </div>
             </div>
         
-            <div className="user_info">
+            <div className="user_info ml-3">
               <div className="flex align-center mb-2 justify-center sm:justify-start">
                 <h4 className="title">
                   <PreloadLink

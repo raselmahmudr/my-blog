@@ -33,7 +33,24 @@ export function filterPost(posts, searchValue) {
 export function filterPostUsingTag(dispatch, tag) {
   api.post("/api/filter-posts", {
     filter: {
-      tags: tag
+      tags: [tag]
+    }
+  }).then(doc=>{
+    dispatch({
+      type: "SEARCH_POSTS",
+      payload: doc.data
+    })
+
+  })
+    .catch(ex=>{
+      console.log(ex)
+    })
+}
+
+export function filterPostUsingText(dispatch, text) {
+  api.post("/api/filter-posts", {
+    filter: {
+      text: text,
     }
   }).then(doc=>{
     dispatch({

@@ -1,10 +1,11 @@
+import React from 'react';
+import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import React from "react";
-import {deletePost, fetchPosts} from "../../store/actions/postAction";
-import {getApi} from "../../apis";
-import {Link, NavLink} from "react-router-dom";
+import {deletePost, fetchPosts} from "../../../store/actions/postAction";
+import {getApi} from "../../../apis";
 
-function DashboardHome(props){
+const AllPosts = () => {
+	
 	const postState = useSelector(state=>state.postState)
 	
 	const dispatch = useDispatch()
@@ -15,7 +16,7 @@ function DashboardHome(props){
 		}
 	}, [])
 	
-
+	
 	function handlePostDelete(id) {
 		dispatch(deletePost(id))
 	}
@@ -32,12 +33,27 @@ function DashboardHome(props){
 		})
 	}
 	
+	
+	
 	return (
-		<div className="container px-4">
-			<h1 className="my-2 dark_title">Admin Dashboard</h1>
+		<div>
+			<h4>All Posts</h4>
+			
+			{ postState.posts.map(p=>(
+				<div className="my-1">
+					<div className="flex justify-between bg-gray-9 bg-opacity-50 py-2">
+						<h4>{p.title}</h4>
+						<span>
+                <Link to={`/admin/dashboard/add-post/${p.id}`}><i className="pointer fa fa-pen" /></Link>
+                <i onClick={()=>handlePostDelete(p.id)} className="pointer fa fa-trash" />
+              </span>
+					</div>
+				
+				</div>
+			)) }
 			
 		</div>
-	)
-}
+	);
+};
 
-export  default DashboardHome
+export default AllPosts;

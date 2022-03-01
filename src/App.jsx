@@ -1,16 +1,16 @@
 import React, {useEffect, Suspense, useState} from "react";
 import ReactLazyPreload from "./utils/ReactLazyPreload";
 import {useStore, useSelector, useDispatch} from "react-redux"
-import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
 const  Navigation = ReactLazyPreload(()=>import("./components/navigation/Navigation"));
 import "./App.scss"
 import Routes from "./Routes"
 
-import {Route, Switch} from "react-router-dom";
+
 import {fetchCurrentAuth} from "store/actions/authAction"
 import Footer from "./components/footer/Footer";
 import api, {getApi} from "./apis";
 import Backdrop from "./components/UI/Backdrop/Backdrop";
+import NavigationSkeleton from "./components/navigation/NavigationSkeleton";
 
 function App(props) {
 
@@ -30,12 +30,7 @@ function App(props) {
     const [expandDropdown, setExpandDropdown] = useState("")
   
   React.useEffect(() => {
-    let html = window.document.children[0]
-    let theme = window.localStorage.getItem("theme")
-    if(theme){
-      html.classList.add(theme)
-    }
-
+    
       const loader = document.querySelector(".loader")
       if(loader) {
           loader.parentElement.removeChild(loader)
@@ -72,8 +67,8 @@ function App(props) {
     <div className="App bg-white dark:bg-dark-800 ">
 
         { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
-
-          <Suspense fallback={<h1>Loading</h1>}>
+      
+          <Suspense fallback={<NavigationSkeleton/>}>
             <Navigation
               handleSetExpandDropdown={handleSetExpandDropdown}
               expandDropdown={expandDropdown}
@@ -81,6 +76,7 @@ function App(props) {
               authState={authState}
             />
           </Suspense>
+     
             <div
              className="App-Content">
                 <div onClick={handleCloseAuthMenu}
@@ -90,8 +86,7 @@ function App(props) {
                       ].join(" ")}>
                 </div>
                   <div className="viewport">
-                     <Routes authState={authState} />
-                
+                     <Routes authState={authState} isAuthLoaded={appState.isAuthLoaded} />
                 </div>
           <Footer/>
         </div>

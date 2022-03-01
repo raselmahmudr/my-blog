@@ -120,6 +120,8 @@ function EditProfileFormModal(props) {
 				
 				<div className="input-elem flex items-center">
 					<input
+						autoComplete={false}
+						aria-autocomplete={"none"}
 						onChange={handleChange}
 						value={value}
 						placeholder={placeholder}

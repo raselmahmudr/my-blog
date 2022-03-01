@@ -158,7 +158,6 @@ const ProfilePage = () => {
 
     return (
              author._id ? <div>
-                
                 <div className="profile_hero_header background_cover"
                      style={{backgroundImage: `url(${renderCoverPhoto()})`}}>
                     <div className="relative overlay">
@@ -240,7 +239,7 @@ const ProfilePage = () => {
                         {authState._id === author._id &&
                         <div className="my-4">
                             {/*<Link className="btn btn-outline dark_subtitle " to="/admin/dashboard/add-post/null">Make A Post</Link>*/}
-                            <PreloadLink className="btn btn-outline dark_subtitle " to="/admin/dashboard/add-post/null">Make A Post</PreloadLink>
+                            <PreloadLink className="btn btn-outline dark_subtitle " to="/auth/add-post/null">Make A Post</PreloadLink>
                         </div>
                         }
 

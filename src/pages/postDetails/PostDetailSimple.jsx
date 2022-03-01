@@ -8,12 +8,7 @@ const PostDetails = ReactLazyPreload(()=>import("./PostDetails"))
 const PostDetailSimple = () => {
     return (
         <div>
-            <Suspense fallback={<div className="container px-4">
-                <div className="mt-4">
-                    <PostDetailSkeleton.SkeletonMeta />
-                    <PostDetailSkeleton.SkeletonContent />
-                </div>
-            </div>}>
+            <Suspense fallback={<PostDetailSkeleton />}>
                 <PostDetails />
             </Suspense>
         </div>
