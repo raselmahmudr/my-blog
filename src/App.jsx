@@ -1,14 +1,14 @@
-import React, {useEffect, Suspense, useState} from "react";
+import React, {Suspense, useState} from "react";
 import ReactLazyPreload from "./utils/ReactLazyPreload";
-import {useStore, useSelector, useDispatch} from "react-redux"
-const  Navigation = ReactLazyPreload(()=>import("./components/navigation/Navigation"));
+import {useSelector, useDispatch} from "react-redux"
+const Navigation = ReactLazyPreload(()=>import("./components/navigation/Navigation"));
 import "./App.scss"
 import Routes from "./Routes"
-
 
 import {fetchCurrentAuth} from "store/actions/authAction"
 import Footer from "./components/footer/Footer";
 import api, {getApi} from "./apis";
+
 import Backdrop from "./components/UI/Backdrop/Backdrop";
 import NavigationSkeleton from "./components/navigation/NavigationSkeleton";
 
@@ -64,10 +64,11 @@ function App(props) {
     }
 
   return (
-    <div className="App bg-white dark:bg-dark-800 ">
-
-        { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
+    <div className="App bg-white dark:bg-dark-800">
+  
       
+        { <Backdrop isOpenBackdrop={appState.isOpenBackdrop}  /> }
+        
           <Suspense fallback={<NavigationSkeleton/>}>
             <Navigation
               handleSetExpandDropdown={handleSetExpandDropdown}
@@ -76,7 +77,7 @@ function App(props) {
               authState={authState}
             />
           </Suspense>
-     
+       
             <div
              className="App-Content">
                 <div onClick={handleCloseAuthMenu}
@@ -90,7 +91,6 @@ function App(props) {
                 </div>
           <Footer/>
         </div>
-
     </div>
 
   )

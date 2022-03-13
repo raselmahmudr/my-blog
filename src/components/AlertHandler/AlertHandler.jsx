@@ -1,6 +1,6 @@
 import {CSSTransition} from "react-transition-group";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
+import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
 import React from "react";
 

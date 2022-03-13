@@ -7,8 +7,8 @@ function RenderPosts(props){
 	const {posts} = props
 	
 	return React.useMemo(() => {
-		return posts && posts.map(post=>(
-			<PreloadLink to={`/posts/${post.slug}/${post._id}`} className="post_link_a">
+		return posts && posts.map((post, i)=>(
+			<PreloadLink key={i} to={`/posts/${post.slug}/${post._id}`} className="post_link_a">
 				<div className="flex mt-8 justify-between flex-col sm:flex-row">
 					<div className="mr-4 flex-5 order-1">
 						<div className="flex align-center">

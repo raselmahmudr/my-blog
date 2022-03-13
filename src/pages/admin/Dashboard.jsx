@@ -18,7 +18,7 @@ const Dashboard = (props) => {
   
   
   return (
-    <div className="container px-15">
+    <div className="container-1200 px-4">
   
       <div className="flex dashboard-navigation bg-pink-300 items-center justify-centers shadow-md mb-4 mt-4 dark:bg-dark-600 rounded ">
         { adminNav.map(nav=>(

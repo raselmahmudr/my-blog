@@ -1,13 +1,12 @@
 import React from 'react'
 import { matchPath, Link, withRouter } from 'react-router-dom'
 
-
 import ProgressBar from "src/components/UI/topProgressBar/TopProgressBar"
 import "./Preload.scss"
 
 
 import { publicRoutes } from "../../Routes";
-import {adminRoutes} from "../../pages/admin/AdminRoutes";
+import { adminRoutes } from "../../pages/admin/AdminRoutes";
 
 const findComponentForRoute = (path, routes) => {
   const matchingRoute = routes.find(route =>
@@ -85,8 +84,7 @@ const PreloadLink = ({staticContext, to, delay, history, isActive, match, ...res
 
     let routes = [
       ...adminRoutes,
-        ...publicRoutes,
-      
+      ...publicRoutes,
     ]
  
     

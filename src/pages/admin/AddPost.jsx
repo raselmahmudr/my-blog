@@ -146,24 +146,6 @@ const AddPost = (props) => {
           author_id: authState._id,
           cover: post.cover ? post.cover : ""
         }
-      
-        // formData.append("title", title)
-        // formData.append("tags", JSON.stringify(tags))
-        // if(post.cover){
-        //   formData.append("cover", post.cover)
-        // }
-        // formData.append("mdContent", markdown_string)
-        // formData.append("author_id", authState.id)
-        //
-        // if(cover.blob){
-        //   let r = await base64ToBlob(cover.base)
-        //   formData.append("upload-cover", r, cover.name)
-        // } else {
-        //   if(cover_url){
-        //     formData.append("cover", cover_url.toString())
-        //   }
-        // }
-
         getApi().post("/api/post/add-post", d)
         .then(response=>{
           if(response.status < 400 && response.status >= 200){
@@ -175,7 +157,11 @@ const AddPost = (props) => {
             })
             setTimeout(()=>{
               let path = `/author/profile/${authState.username}/${authState._id}`
-              history.push(path)
+              // dispatch({
+              //   type: "UPDATE_USER_PROFILE_POSTS",
+              //   payload: { userId: authState._id, post: response.data }
+              // })
+              // history.push(path)
             }, 500)
           } else{
             setLoadingState({

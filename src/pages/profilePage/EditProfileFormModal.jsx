@@ -12,7 +12,7 @@ function EditProfileFormModal(props) {
 	const [userProfile, setUserProfile] = React.useState({
 		username: "",
 		email: "",
-		about_you: "",
+		description: "",
 		first_name: "",
 		last_name: "",
 		oldPassword: "",
@@ -26,7 +26,7 @@ function EditProfileFormModal(props) {
 			email: author.email,
 			first_name: author.first_name,
 			last_name: author.last_name,
-			about_you: author.about_you,
+			description: author.description,
 		})
 	}, [author])
 	
@@ -55,7 +55,7 @@ function EditProfileFormModal(props) {
 			email: userProfile.email ? userProfile.email.trim() : '',
 			first_name: userProfile.first_name ? userProfile.first_name.trim() : '',
 			last_name: userProfile.last_name ? userProfile.last_name.trim() : '',
-			about_you: userProfile.about_you ? userProfile.about_you.trim() : ''
+			description: userProfile.description ? userProfile.description.trim() : ''
 		}
 		
 		if (userProfile.oldPassword && userProfile.newConfirmPassword && userProfile.newConfirmPassword ) {
@@ -87,7 +87,7 @@ function EditProfileFormModal(props) {
 						oldPassword: "",
 						newPassword: "",
 						newConfirmPassword: "",
-						about_you: ""
+						description: ""
 					})
 				}, 200)
 			} else {
@@ -144,7 +144,7 @@ function EditProfileFormModal(props) {
 					onClick={closeErrorMessage} status={200} />
 				
 				
-				<h1 className="text-lg font-400 text-gray-light-7 text-center mb-5">Edit Profile Information</h1>
+				<h1 className="text-lg font-400 text-gray-light-7 text-center mb-5 ">Edit Profile Information</h1>
 				
 				<form onSubmit={handleSubmit} className="py-1 w-full">
 					
@@ -167,9 +167,9 @@ function EditProfileFormModal(props) {
 						<label className="font-medium min-w-150 block text-sm font-400 text-gray-dark-4;" htmlFor="">About You</label>
 						<div className="input-elem ">
 						<textarea
-							name="about_you"
+							name="description"
 							onChange={handleChange}
-							defaultValue={userProfile.about_you}
+							defaultValue={userProfile.description}
 							placeholder="About Your"
 							className="outline-none w-full"
 						>

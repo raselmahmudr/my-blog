@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import api from "../../apis";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHeart, faUserCircle, faUsers} from "@fortawesome/pro-solid-svg-icons";
+import {faHeart, faUserCircle, faUsers} from "@fortawesome/free-solid-svg-icons";
 import PreloadLink from "src/components/preloadLink/PreloadLink";
 
 const Post = (props) => {

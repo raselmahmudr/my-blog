@@ -48,7 +48,9 @@ const HeroSection = (props) => {
          <div className="mt-8">
              <div style={{maxWidth: "400px"}}>
                {/*<img src="https://drive.google.com/uc?id=1dMwmUemXuebCC9XaHU_ymA3yGfVsAD3l&export=download" alt=""/>*/}
-                 <h1 className="text-black dark:text-dark-0 text-base  mb-2 ">DEV STORY is a place
+                 <h1 className="text-black dark:text-dark-0 text-base  mb-2 ">
+                   <span className="font-medium mr-1">DEV STORY</span>
+                   is a place
                      to write, read,
                      and connect</h1>
                  <p className="text-dark-400   dark:text-dark-10 text-base">It's easy and free to post your thinking on any topic and connect

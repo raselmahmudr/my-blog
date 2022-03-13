@@ -46,7 +46,7 @@ const ProfileSkeleton = () => {
                 </Skelecton>
     
                 { new Array(5).fill(1).map((a, i)=>(
-                  <li className="my-4"><PostSkeleton /></li>
+                  <li className="my-4" key={i}><PostSkeleton /></li>
                 )) }
             </div>
         </div>

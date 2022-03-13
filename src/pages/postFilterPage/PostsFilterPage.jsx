@@ -10,7 +10,7 @@ import {
   filterPostUsingText
 } from "../../store/actions/postAction";
 import Loader from "../../components/UI/Loader";
-import {faTimesCircle} from "@fortawesome/pro-solid-svg-icons";
+import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 
 
 

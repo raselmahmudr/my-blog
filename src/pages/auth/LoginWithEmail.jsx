@@ -7,8 +7,6 @@ import "./Login.scss"
 import ReactLazyPreload from "../../utils/ReactLazyPreload";
 import ProgressBar from "react-topbar-progress-indicator";
 import api from "../../apis";
-import {faUserCircle} from "@fortawesome/pro-light-svg-icons";
-import {FontAwesomeIcon} from  "@fortawesome/react-fontawesome"
 import TakeUserInputStep from "./TakeUserInputStep";
 import validateEmail from "../../utils/validateEmail";
 const ForgetPassword = ReactLazyPreload(()=>import("src/pages/auth/ForgetPassword"));
@@ -26,6 +24,9 @@ const LoginWithEmail = (props) => {
 	const [buttonState, setButtonState] = React.useState({
 		"continue": false
 	})
+	
+	const [fetchLoading, setFetchLoading] = React.useState(false)
+	
 	
 	const [userData, setUserData] = React.useState({
 		email: "",
@@ -63,19 +64,22 @@ const LoginWithEmail = (props) => {
 								return
 							}
 						}
-						
+						setFetchLoading(true)
 						let response = await api.get(`/api/auth/user/${userData.email}`)
 						if (response.status === 200){
 							setUserData({
 								...userData,
 								avatar: response.data.user.avatar
 							})
+							setFetchLoading(false)
 							setStepNumber(1)
 						} else {
+							setFetchLoading(false)
 							setMessage(response.data.message)
 						}
 						
 					} catch (ex){
+						setFetchLoading(false)
 						setMessage(ex.response ? ex.response.data.message : "Network fail")
 						// if(ex.response.status === 404){
 						// 	r(true) /// this email not registered
@@ -110,15 +114,19 @@ const LoginWithEmail = (props) => {
 				setMessage("")
 				return new Promise(async (r, s)=>{
 					try {
+						setFetchLoading(true)
 						loginUser(userData, dispatch, (err) => {
 							if (err) {
+								setFetchLoading(false)
 								setMessage(err)
 							} else {
+								setFetchLoading(false)
 								history.push("/")
 							}
 						})
 					
 					} catch (ex){
+						setFetchLoading(false)
 						setMessage(ex.response ? ex.response.data.message : "Network fail")
 						// if(ex.response.status === 404){
 						// 	r(true) /// this email not registered
@@ -368,6 +376,7 @@ const LoginWithEmail = (props) => {
 							// handlePreviousStep={handlePreviousStep}
 							handleChange={handleChange}
 							userData={userData}
+							fetchLoading={fetchLoading}
 							message={message}
 							stepData={stepData[stepNumber]}
 						/>

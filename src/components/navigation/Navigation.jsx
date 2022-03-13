@@ -12,11 +12,11 @@ import {
   faSignOutAlt,
   faUserAlt,
   faUserCircle,
-  faSignIn,
+  faSignIn,faMoon, faSun
 } from '@fortawesome/pro-solid-svg-icons'
 
-import {faAdn} from "@fortawesome/pro-brands-svg-icons";
-import {faMoon, faSun} from "@fortawesome/pro-solid-svg-icons";
+import {faAdn} from "@fortawesome/free-brands-svg-icons";
+
 import withWidth from "../UI/withWidth/WithWidth";
 
 const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg"  width="153" height="27.851" viewBox="0 0 153 27.851">
@@ -39,7 +39,7 @@ const Logo = (_)=> <svg xmlns="http://www.w3.org/2000/svg"  width="153" height="
     <text id="DEV_STORY" data-name="DEV STORY" transform="translate(90 52)"
           fill="#5d51ff" font-size="22"
           font-family="Roboto-Medium, Roboto"
-          font-weight="800" letter-spacing="-0.015em">
+          font-weight="900" letter-spacing="-0.015em">
       <tspan x="0" y="0">DEV STORY</tspan></text>
   </g>
 </svg>

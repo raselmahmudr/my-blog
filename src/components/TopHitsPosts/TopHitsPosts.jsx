@@ -1,12 +1,13 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import PreloadLink from "../preloadLink/PreloadLink";
 
 function TopHitsPosts(props){
 	const {topPosts} = props
 	
 	return React.useMemo(() => {
 		return topPosts.posts && topPosts.posts.map((post, index) => (
-			<Link to={`/posts/${post.slug}/${post._id}`} className="post_link_a">
+			<PreloadLink to={`/posts/${post.slug}/${post._id}`} className="post_link_a">
 				<div className="flex mx-4  my-4">
           <span
 						className="text-dark-400 text-2xl font-bold whitespace-nowrap mr-4">{index < 9 ? 0 : ''}{index + 1}</span>
@@ -27,7 +28,7 @@ function TopHitsPosts(props){
 					</div>
 				
 				</div>
-			</Link>
+			</PreloadLink>
 		))
 	}, [props.topPosts.posts])
 	

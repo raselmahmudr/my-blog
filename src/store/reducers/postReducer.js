@@ -1,17 +1,17 @@
 const initialState = {
-  posts: [
-  ],
-  
+  posts: [],
   postDetails: {},
-  
   searchPosts: [],
   searchValue: "",
-  
   likes: [],
   topPosts: {
     posts: [],
     last_time: "" // Date
-  }
+  },
+  // authPosts: null // after fetch posts it will be array of post then skeleton load complete
+  cacheUserProfile: [
+    // {_id: "", avatar: "", ...,  posts: []}
+  ]
 }
 
 
@@ -80,6 +80,37 @@ export default function (state = initialState, action) {
           you_liked: 0,
           total_likes: updatedState.posts[index].total_likes - 1
         }
+      }
+      return updatedState
+    
+    case "FETCH_USER_POSTS" :
+      
+      index = updatedState.cacheUserProfile.findIndex(profile=>profile._id === action.payload.userId)
+      if(index !== -1) {
+        updatedState.cacheUserProfile[index] = {
+          ...updatedState.cacheUserProfile[index],
+          posts: action.payload.posts,
+        }
+      }
+      return updatedState
+    
+    
+    case "DELETE_CACHE_USER_POST" :
+      const currentCacheUserIndex = updatedState.cacheUserProfile.findIndex(profile=>profile._id ===  action.payload.author_id)
+      if(currentCacheUserIndex === -1) return updatedState
+      
+      
+      /** find post index that we need delete */
+      index = updatedState.cacheUserProfile[currentCacheUserIndex].posts.findIndex(p=>p._id === action.payload._id)
+      if(index === -1)  return  updatedState
+      
+      updatedState.cacheUserProfile[currentCacheUserIndex].posts.splice(index, 1)
+      return updatedState
+    
+    case "FETCH_USER_PROFILE" :
+      index = updatedState.cacheUserProfile.findIndex(profile=>profile._id === action.payload._id)
+      if(index === -1) {
+        updatedState.cacheUserProfile = [...updatedState.cacheUserProfile, action.payload]
       }
       return updatedState
     

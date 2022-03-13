@@ -4,22 +4,24 @@ import {useDispatch, useSelector} from "react-redux";
 import {deletePost, fetchPosts} from "../../../store/actions/postAction";
 import {getApi} from "../../../apis";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {faTrash} from "@fortawesome/pro-regular-svg-icons";
+import {faPen} from "@fortawesome/free-solid-svg-icons";
+import PreloadLink from "../../../components/preloadLink/PreloadLink";
+
 const AllPosts = () => {
 	
-	const postState = useSelector(state=>state.postState)
+	const {postState, authState} = useSelector(state=>state)
 	
 	const dispatch = useDispatch()
 	
 	React.useEffect(()=>{
-		if(postState.posts && postState.posts.length === 0){
-			fetchPosts(dispatch)
+		if(postState.posts && postState.posts.length <= 0 ){
+			fetchPosts(dispatch, "", (data) => {})
 		}
 	}, [])
 	
-	
-	function handlePostDelete(id) {
-		dispatch(deletePost(id))
-	}
+
 	
 	function downloadBackup(){
 		getApi().get("/api/backup", {responseType: "blob"}).then(r=>{
@@ -33,19 +35,35 @@ const AllPosts = () => {
 		})
 	}
 	
+	function deletePostHandler(id, path) {
+		
+		if(authState._id && authState.role === "admin") {
+			dispatch(deletePost(id, path ? path : "", authState._id ))
+		} else {
+			dispatch(deletePost(id, path ? path : ""))
+		}
+		// setOwnPosts(ownPosts.filter(p=>p._id !== id))
+	}
+	
 	
 	
 	return (
 		<div>
-			<h4>All Posts</h4>
+			<h1 className="dark_subtitle">All Posts</h1>
 			
 			{ postState.posts.map(p=>(
-				<div className="my-1">
-					<div className="flex justify-between bg-gray-9 bg-opacity-50 py-2">
-						<h4>{p.title}</h4>
-						<span>
-                <Link to={`/admin/dashboard/add-post/${p.id}`}><i className="pointer fa fa-pen" /></Link>
-                <i onClick={()=>handlePostDelete(p.id)} className="pointer fa fa-trash" />
+				<div className="my-1 px-3 bg-gray-9 dark:bg-dark-600">
+					<div className="flex justify-between bg-opacity-50 py-2">
+						<h4 className="dark_subtitle">{p.title}</h4>
+						<span className="flex align-center">
+							<PreloadLink to={`/admin/dashboard/add-post/${p.id}`}>
+								 <FontAwesomeIcon icon={faPen} className="pointer fa fa-trash ml-3 text-sm dark_gray "/>
+							</PreloadLink>
+							
+                <FontAwesomeIcon
+									icon={faTrash}
+									onClick={(e) => deletePostHandler(p._id, p.path)}
+									className="dark_subtitle pointer fa fa-trash ml-3" />
               </span>
 					</div>
 				

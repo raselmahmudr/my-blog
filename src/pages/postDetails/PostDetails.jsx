@@ -1,33 +1,28 @@
 import React from 'react';
 import {Link, useParams} from "react-router-dom";
-
 import "./style.scss"
 import apis, {getApi} from "../../apis";
 import fullLink from "../../utils/fullLink";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock,  faEye, faHeart } from "@fortawesome/pro-solid-svg-icons";
+import {faClock,  faEye, faHeart, faComment } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle} from "@fortawesome/pro-light-svg-icons";
 import {faHeart as faHeartLI} from "@fortawesome/pro-regular-svg-icons";
 import {useSelector} from "react-redux";
 import PreloadLink from "src/components/preloadLink/PreloadLink";
 import PostDetailSkeleton from "./PostDetailSkeleton";
-
-import {faComment} from "@fortawesome/pro-solid-svg-icons";
 import AddComment from "../../components/comments/AddComment";
 import Comments from "../../components/comments/Comments";
-
 import AlertHandler from "../../components/AlertHandler/AlertHandler";
 
-import "highlight.js/styles/vs.css"
 
-import "./hijs.css"
+import "./hijs.scss"
 
 let id;
 const PostDetails = (props) => {
 
   let params = useParams()
   const authState = useSelector(state=>state.authState)
-  
+
   const [postDetails, setPostDetails] = React.useState({
     mdContent: "",
     comments: [],
@@ -43,7 +38,10 @@ const PostDetails = (props) => {
     status: "", // "error" || "success"
     message: ""
   })
-
+  const [markDownContent, setMarkDownContent] = React.useState({
+    _id: "",
+    html: ""
+  })
   React.useEffect(()=>{
     if(loadingState.isShown) {
      id = setTimeout(() => {
@@ -57,7 +55,7 @@ const PostDetails = (props) => {
       id && clearTimeout(id)
     }
   }, [loadingState.isShown])
-  
+
   const [isOver, setOver] = React.useState(false)
 
   React.useEffect(async () => {
@@ -70,15 +68,56 @@ const PostDetails = (props) => {
         ...post
       }
       setPostDetails(updatedPostDetails)
-      
+
       // fetch markdown html
-      let mdContentResponse = await apis.post(`/api/post-content`, {filePath: post.path, post_id: post._id})
-      if (mdContentResponse.status === 200) {
-        setPostDetails({
-          ...post,
-          mdContent: mdContentResponse.data
-        })
+      // let mdContentResponse = await apis.post(`/api/markdown/content`,
+      //   {filePath: post.path, post_id: post._id},
+      //   { headers: {
+      //       responseType: 'stream'
+      //     } }
+      //   )
+      // console.log(mdContentResponse.data.length)
+      // if (mdContentResponse.status === 200) {
+      //   setPostDetails({
+      //     ...post,
+      //     mdContent: mdContentResponse.data
+      //   })
+      // }
+
+      let req = new XMLHttpRequest()
+      req.open("POST", "http://localhost:8080/api/markdown/content")
+      req.responseType = 'text';
+      req.onload = function (e){
+        // console.log(e)
       }
+
+      req.onprogress = ev => {
+        // console.log(ev)
+      }
+
+      /** store chunked markdown html and render it  */
+      req.onreadystatechange = function() {
+        if(markDownContent.html){
+          // re-render every second when streaming...
+          setTimeout(()=>{
+            setMarkDownContent({
+              _id: post._id,
+              html: markDownContent.html + req.response
+            })
+          }, 1000)
+        } else {
+          setMarkDownContent({
+            _id: post._id,
+            html: markDownContent.html + req.response
+          })
+        }
+      }
+
+      req.setRequestHeader('Content-type', 'application/json')
+      req.send(JSON.stringify({
+        filePath: post.path,
+        post_id: post._id
+      }));
     }
   }, [params.id])
 
@@ -117,7 +156,7 @@ const PostDetails = (props) => {
 
   function handleAddLike(post_id) {
     if(!authState || !authState._id){
-    
+
       setLoadingState({
         id: "add_comment",
         status: 200,
@@ -126,7 +165,7 @@ const PostDetails = (props) => {
       })
       return
     }
-    
+
     getApi().post("/api/toggle-like", {post_id: post_id, user_id: authState._id}).then(r => {
       if (r.status === 201) {
         let post = r.data.post
@@ -156,7 +195,7 @@ const PostDetails = (props) => {
         isShown: true
       })
     })
-    
+
   }
 
 
@@ -185,7 +224,7 @@ const PostDetails = (props) => {
     return (
         <div className="article">
           {/*<div className="flex mb-5 justify-center"><img src={fullLink(postDetails.cover)} alt=""/></div>*/}
-          <div className="code  dark:text-white " dangerouslySetInnerHTML={{__html: postDetails.mdContent}}/>
+          <div className="code  dark:text-white " dangerouslySetInnerHTML={{__html: markDownContent.html}}/>
           <br/>
         </div>
     )
@@ -198,9 +237,9 @@ const PostDetails = (props) => {
       ...loadingState,
       isShown: false
     })
-    
+
     if(!authState || !authState._id){
-   
+
       setLoadingState({
         id: "add_comment",
         status: 200,
@@ -209,7 +248,7 @@ const PostDetails = (props) => {
       })
       return
     }
-    
+
     if(!text){
       setLoadingState({
         id: "add_comment",
@@ -351,7 +390,7 @@ const PostDetails = (props) => {
 
             <div className="flex items-center mb-2 ml-4">
               <FontAwesomeIcon icon={faEye} className="text-gray-dark-9" />
-              <h4 className="ml-1 text-sm">{postDetails.hits ? postDetails.hits : 0} read</h4>
+              <h4 className="ml-1 text-sm">{postDetails.hits ? postDetails.hits.hits : 0} read</h4>
             </div>
 
 
@@ -394,10 +433,10 @@ const PostDetails = (props) => {
 
 
   return (
-    <div className="container px-4 min-h-viewport">
-      
+    <div className="container-1000 px-4 min-h-viewport">
+
       <AlertHandler message={loadingState.message} isShown={loadingState.isShown} onClick={closeErrorMessage} status={200}/>
-      
+
       {postDetails._id ? (
         <div className="post_detail mt-4">
           {postDetails.author && <div className="post_author_description items-start">
@@ -411,13 +450,13 @@ const PostDetails = (props) => {
                 )}
               </div>
             </div>
-        
+
             <div className="user_info ml-3">
               <div className="flex align-center mb-2 justify-center sm:justify-start">
                 <h4 className="title">
                   <PreloadLink
                     className="text-md"
-                    to={`/author/profile/${postDetails.author.username}/${postDetails.author._id}`}>
+                    to={`/author/profile/${postDetails.author.first_name} ${postDetails.author.last_name ? postDetails.author.last_name : ""}/${postDetails.author._id}`}>
                     {postDetails.author.first_name} {postDetails.author.last_name}
                   </PreloadLink>
                 </h4>
@@ -427,8 +466,8 @@ const PostDetails = (props) => {
             </div>
           </div>
           }
-      
-      
+
+
           {/* post title */}
           <div className="post_meta mt-4">
             <h1 className="title text-3xl dark_title">{postDetails.title}</h1>
@@ -440,20 +479,20 @@ const PostDetails = (props) => {
                 </span>
             </div>
           </div>
-      
+
           {/* post cover photo */}
           <div className="flex mb-5 justify-center">
             <img className="w-full"
                  src={fullLink(postDetails.cover)} alt=""/>
           </div>
-      
-          {postDetails.mdContent && (
+
+          {markDownContent.html && (
             <>
               {renderMarkdownContent()}
               {renderPostFooter()}
             </>
           )}
-    
+
         </div>
       ) : (
         <div className="mx-4 mt-4">
@@ -461,13 +500,17 @@ const PostDetails = (props) => {
           <PostDetailSkeleton.SkeletonContent/>
         </div>
       )}
-  
-  
-      {!postDetails.mdContent && <PostDetailSkeleton.SkeletonContent/>}
+
+
+      {/*{!markDownContent.html && <PostDetailSkeleton.SkeletonContent/>}*/}
 
 
     </div>
-  );
+  
+);
+  
+  
+
 };
 
 export default PostDetails;

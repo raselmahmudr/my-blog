@@ -27,12 +27,13 @@ const SignUp = (props) => {
 		"continue": false
 	})
 	const [userData, setUserData] = React.useState({
-		firstName: "mm",
-		lastName: "kkk",
-		email: "hjh@gmail.com",
+		firstName: "",
+		lastName: "",
+		email: "",
 		password: "",
 		confirmPassword: "",
 	})
+	const [fetchLoading, setFetchLoading] = React.useState(false)
 	
 	const [stepNumber, setStepNumber] = React.useState(0)
 	
@@ -96,18 +97,22 @@ const SignUp = (props) => {
 							return
 						}
 					}
-					
+					setFetchLoading(true)
 					let response = await api.get(`/api/auth/user/${userData.email}`)
 					if (response.status === 200) {
+						
 						setMessage("User already registered")
+						setFetchLoading(false)
 					} else {
 						 /// this email not registered
 						setStepNumber(stepNumber + 1)
+						setFetchLoading(false)
 					}
 					
 				} catch (ex){
 					/// this email not registered
 					setStepNumber(stepNumber + 1)
+					setFetchLoading(false)
 				}
 			},
 		}
@@ -483,6 +488,7 @@ const SignUp = (props) => {
 								handlePreviousStep={handlePreviousStep}
 								handleChange={handleChange}
 								userData={userData}
+								fetchLoading={fetchLoading}
 								message={message}
 								stepData={stepData[stepNumber]}
 							/>

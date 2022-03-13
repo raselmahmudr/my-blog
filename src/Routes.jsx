@@ -2,30 +2,23 @@ import React, {lazy, Suspense} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
 import ReactLazyPreload from "./utils/ReactLazyPreload";
 import ProgressBar from "./components/UI/topProgressBar/TopProgressBar";
+
 import AddPostSkeleton from "./pages/admin/AddPostSkeleton";
 
 const AllSignInLite  = ReactLazyPreload(()=>import("./pages/auth/AllSignInLite"));
 const AuthService = ReactLazyPreload(()=>import("./pages/auth/AuthService"));
 const PostsFilterPageLite = ReactLazyPreload(()=>import("./pages/postFilterPage/PostsFilterPageLite"));
-
 const HomePageLite = ReactLazyPreload(()=>import("./pages/homePage/HomePageLite"));
 const About = ReactLazyPreload(()=>import("./components/about/About"));
-// const Posts = ReactLazyPreload(()=>import("./pages/posts/Posts"));
-// const Login = ReactLazyPreload(()=>import("./pages/auth/Login"));
-// const Registration = ReactLazyPreload(()=>import("./pages/auth/Registration"));
-// const Peoples = ReactLazyPreload(()=>import("./pages/findPeoples/Peoples"));
-// const LoginHomePage = ReactLazyPreload(()=>import("./pages/loginHomePage/LoginHomePage"));
 
 const PostDetailSimple = ReactLazyPreload(()=>import("./pages/postDetails/PostDetailSimple"));
-
 const AddPost = ReactLazyPreload(()=>import("src/pages/admin/AddPostSimple"));
-
 const Dashboard = ReactLazyPreload(()=>import("src/pages/admin/Dashboard"));
 const ProfilePageSimple = ReactLazyPreload(()=>import("src/pages/profilePage/ProfilePageSimple"));
 
 export const publicRoutes = [
-  {path: "/", exact: true, component: HomePageLite},
-  {path: "/search", exact: true, component: PostsFilterPageLite},
+  { path: "/", exact: true, component: HomePageLite},
+  { path: "/search", exact: true, component: PostsFilterPageLite},
   {
     path: "/author/profile/:username/:id",
     exact: true,
@@ -66,10 +59,11 @@ const Routes = (props)=> {
       <Suspense fallback={<ProgressBar/>}>
         {/*{routes(!!authState.id).map((route, i) => <Route key={i} {...route} />)}*/}
         
-        { publicRoutes && publicRoutes.map((route)=>{
+        { publicRoutes && publicRoutes.map((route, i)=>{
           if(route.protected){
             return (
               <Route
+                key={i}
                 path={route.path}
                 exact={route.exact}
                 render={(props) =>
@@ -84,6 +78,7 @@ const Routes = (props)=> {
             
             return (
               <Route
+                key={i}
                 path={route.path}
                 exact={route.exact}
                 render={(props) =>{

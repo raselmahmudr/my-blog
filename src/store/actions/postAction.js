@@ -88,7 +88,7 @@ export  function fetchPosts(dispatch, pathname, cb){
     if(response.status === 200){
       dispatch({
         type: "FETCH_POSTS",
-        payload: response.data
+        payload: response.data.posts
       })
       cb()
     } else {
@@ -161,17 +161,19 @@ export function fetchRawMdContent(path, dispatch, cb){
   // }).catch(ex=>{
   //   cb("")
   // })
-  
 }
 
-export const deletePost = (postId, path, cb) => async (dispatch) => {
-  let response = await api.post(`/api/posts/delete`, { _id: postId, path })
-  if (response.status === 200) {
+
+export const deletePost = (postId, path, author_id, adminId) => async (dispatch) => {
+  let response = await api.post(`/api/posts/delete`, { _id: postId, path: path, adminId: adminId })
+  if (response.status === 201) {
     dispatch({
-      type: "DELETE_POST",
-      payload: postId
+      type: "DELETE_CACHE_USER_POST",
+      payload: {
+        _id: response.data.id,
+        author_id
+      }
     })
-    cb && cb(true)
   }
 }
 

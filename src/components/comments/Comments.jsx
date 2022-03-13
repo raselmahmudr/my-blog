@@ -5,8 +5,7 @@ import "./comments.scss"
 import AddComment from "./AddComment";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faClock, faHeart, faPen, faReply, faTrash, faUserCircle} from "@fortawesome/pro-solid-svg-icons";
-import {faUser} from "@fortawesome/pro-regular-svg-icons";
+import {faClock, faHeart, faPen, faReply, faTrash, faUserCircle} from "@fortawesome/free-solid-svg-icons";
 import PreloadLink from "../preloadLink/PreloadLink";
 
 const Comments = (props) => {
